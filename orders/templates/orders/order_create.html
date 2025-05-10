@@ -1,7 +1,6 @@
 {% extends "private/base.html" %}
 {% block head %}
 <meta name="csrf-token" content="{{ csrf_token }}">
-
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -11,10 +10,18 @@
     <div id="app">
         <form @submit.prevent="submitOrder">
             <div class="mb-3">
-                <label class="form-label">Cliente</label>
-                <select class="form-select" v-model="order.client" required>
-                    <option v-for="client in clients" :value="client.id">[[ client.name ]] ([[ client.phone ]])</option>
-                </select>
+                <label for="clientName" class="form-label">Nombre del Cliente</label>
+                <input type="text" class="form-control" id="clientName" v-model="clientData.name" required>
+            </div>
+            <div class="mb-3">
+                <label for="clientPhone" class="form-label">Teléfono del Cliente</label>
+                <input type="text" class="form-control" id="clientPhone" v-model="clientData.phone" @change="checkClient" required>
+            </div>
+            
+            <div class="mb-3" v-if="existingClient">
+                <div class="alert alert-info">
+                    Cliente existente encontrado: [[ existingClient.name ]] ([[ existingClient.phone ]])
+                </div>
             </div>
             
             <h4>Líneas del Pedido</h4>
@@ -67,6 +74,11 @@
         delimiters: ['[[', ']]'],
         setup() {
             const clients = ref([])
+            const existingClient = ref(null)
+            const clientData = ref({
+                name: '',
+                phone: ''
+            })
             const order = ref({
                 client: null,
                 lines: [{
@@ -82,6 +94,44 @@
                     clients.value = response.data
                 } catch (error) {
                     console.error('Error fetching clients:', error)
+                }
+            }
+            
+            const checkClient = async () => {
+                if (!clientData.value.phone) return
+                
+                try {
+                    // Buscar cliente por teléfono
+                    const response = await axios.get(`http://localhost:8000/admin/o/api/clients/?phone=${clientData.value.phone}`)
+                    
+                    if (response.data.length > 0) {
+                        existingClient.value = response.data[0]
+                        order.value.client = existingClient.value.id
+                        // Autocompletar el nombre si está vacío
+                        if (!clientData.value.name) {
+                            clientData.value.name = existingClient.value.name
+                        }
+                    } else {
+                        existingClient.value = null
+                        order.value.client = null
+                    }
+                } catch (error) {
+                    console.error('Error checking client:', error)
+                }
+            }
+            
+            const createClient = async () => {
+                if (!clientData.value.name || !clientData.value.phone) return null
+                
+                try {
+                    const response = await axios.post('http://localhost:8000/admin/o/api/clients/', {
+                        name: clientData.value.name,
+                        phone: clientData.value.phone
+                    })
+                    return response.data
+                } catch (error) {
+                    console.error('Error creating client:', error)
+                    return null
                 }
             }
             
@@ -109,11 +159,21 @@
             
             const submitOrder = async () => {
                 try {
+                    // Si no hay cliente asignado, crear uno nuevo
+                    if (!order.value.client) {
+                        const newClient = await createClient()
+                        if (!newClient) {
+                            alert('Error al crear el cliente')
+                            return
+                        }
+                        order.value.client = newClient.id
+                    }
+                    
                     const payload = {
                         client: order.value.client,
                         lines: order.value.lines
                     }
-                    console.log(payload)
+                    
                     const response = await axios.post('http://localhost:8000/admin/o/api/orders/', payload)
                     alert('Pedido creado exitosamente!')
                     window.location.href = `/admin/o/detail/${response.data.id}`
@@ -129,7 +189,10 @@
             
             return {
                 clients,
+                clientData,
+                existingClient,
                 order,
+                checkClient,
                 addLine,
                 removeLine,
                 calculateSubtotal,

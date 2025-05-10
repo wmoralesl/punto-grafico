@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import OrderForm, OrderLineFormSet
-
+from django_filters.rest_framework import DjangoFilterBackend
 from django.views.generic import TemplateView, DetailView, ListView
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
@@ -28,6 +28,8 @@ class OrderDetailView(DetailView):
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['phone']
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
@@ -45,19 +47,3 @@ class OrderViewSet(viewsets.ModelViewSet):
         order.total = total
         order.save()
 
-class OrderLinesView(generics.ListCreateAPIView):
-    serializer_class = OrderLineSerializer
-    
-    def get_queryset(self):
-        order_id = self.kwargs['order_id']
-        return OrderLine.objects.filter(order_id=order_id)
-    
-    def perform_create(self, serializer):
-        order_id = self.kwargs['order_id']
-        order = Order.objects.get(pk=order_id)
-        serializer.save(order=order)
-        # Actualizar el total del pedido
-        lines = order.lines.all()
-        total = sum(line.subtotal() for line in lines)
-        order.total = total
-        order.save()
