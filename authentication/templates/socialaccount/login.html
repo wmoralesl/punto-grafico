@@ -1,0 +1,13 @@
+
+{% extends 'public/base.html' %}
+{% block content %}
+    <div class="container">
+        <h1 class="title">Inicio de sesión mediante {{ provider.name }}</h1>
+        <p>A continuación iniciará sesión con su cuenta de {{provider.name}}</p>
+    <!-- Botón para continuar -->
+    <form method="post" action="">
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">Continuar</button>
+    </form>
+    </div>
+{% endblock %}

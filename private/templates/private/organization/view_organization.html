@@ -1,0 +1,90 @@
+{% extends 'private/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container mt-3">
+        <div class="card position-relative">
+            <!-- Imagen de portada -->
+            <div class="card-header p-0">
+              {% if organization.banner %}
+              <div 
+              class="bg-dark" 
+              style="height: 200px; background-image: url('{{ organization.banner.url }}'); background-size: cover; background-position: center;">
+          </div>
+              {% else %}
+              <div class="bg-dark" style="height: 200px; background-size: cover; background-position: center;"></div>
+    
+              {% endif %}
+              
+          </div>
+    <!-- Menú desplegable en la esquina superior derecha -->
+    {% if request.user.role == 'admin' %}
+    <div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+      <button 
+          class="btn btn-dark dropdown-toggle" 
+          type="button" 
+          id="actionMenuButton" 
+          data-bs-toggle="dropdown" 
+          aria-expanded="false">
+          <i class="bi bi-three-dots-vertical"></i>
+      </button>
+    
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionMenuButton"> 
+        
+        <li><a class="dropdown-item" href="{% url 'private:update_configuration' %}">
+          <i class="bi bi-pencil-square me-2"></i>
+          Editar configuración
+        </a></li>
+        <li><a class="dropdown-item" href="{% url 'backup:db_backup' %}">
+          <i class="bi bi-database me-2"></i>
+          Copia de seguridad
+        </a></li>
+    
+        <li><a class="dropdown-item" href="{% url 'private:view_user_actions' %}">
+          <i class="bi bi-clock-history me-2"></i>
+          Historial de cambios
+        </a></li>
+    
+      </ul>
+    </div>
+    {% endif %}
+    <div class="card-body text-center">
+        <!-- Foto de perfil -->
+        <div class="profile-pic-container position-relative">
+
+            {% if organization.logo %}
+          <a href="{{organization.logo.url}}" target="_blank">
+          <img 
+          
+            class="bg-light rounded-circle border border-3 border-white position-absolute" 
+            src="{{ organization.logo.url }}"
+            alt="Foto de perfil" 
+            style="width: 120px; height: 120px; top: -60px; left: 50%; transform: translateX(-50%);">
+          </a>
+        {% else %}
+            <img 
+              class="rounded-circle border border-3 border-white position-absolute" 
+              src="{% static 'img/untils/nophoto.jpg' %}"
+              alt="Foto de perfil" 
+              style="width: 120px; height: 120px; top: -60px; left: 50%; transform: translateX(-50%);">
+        {% endif %}
+        </div>
+        
+        <div style="margin-top: 64px;">
+            <!-- Nombre completo y rol -->
+            <h3 class="text-capitalize">{{ organization.name }}</h3>
+            <p class="badge bg-secondary d-none">{{ user.get_role_display }}</p>
+        </div>
+
+        <!-- Información del usuario -->
+        <ul class="list-unstyled mt-1">
+            <li> {{ organization.description }}</li>
+        </ul>
+        
+    </div>
+    </div>
+    </div> 
+    
+
+{% endblock %}

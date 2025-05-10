@@ -1,0 +1,25 @@
+<script>
+    {% for message in messages %}
+      var iconType = '';
+      // Establecer el icono según el tipo de mensaje
+      {% if 'success' in message.tags %}
+        iconType = 'success';
+      {% elif 'error' in message.tags %}
+        iconType = 'error';
+      {% elif 'warning' in message.tags %}
+        iconType = 'warning';
+      {% elif 'info' in message.tags %}
+        iconType = 'info';
+      {% elif 'question' in message.tags %}
+        iconType = 'question';
+      {% endif %}
+
+      // Mostrar la alerta con el icono correspondiente
+      Swal.fire({
+        title: '¡Mensaje!',
+        text: '{{ message }}',
+        icon: iconType,
+        confirmButtonText: 'Aceptar'
+      });
+    {% endfor %}
+  </script>

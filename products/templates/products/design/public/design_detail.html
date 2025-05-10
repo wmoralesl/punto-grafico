@@ -1,0 +1,76 @@
+{% extends 'public/base.html' %}
+
+{% block content %}
+    <!-- Fancybox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+    <!-- Fancybox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+
+{% include 'public/frames/navbar.html' %}
+
+<div class="container my-4">
+    <div class="row align-items-center">
+        <!-- Imagen del producto -->
+        <div class="col-12 col-md-6">
+            <a 
+               data-fancybox="gallery" 
+               href="{{ playera.image.url }}" 
+               data-caption="{{ playera.description }}">
+                <img src="{{ playera.image.url }}" class="img-fluid rounded" alt="{{ playera.description }}">
+            </a>
+        </div>
+        <!-- Información del producto -->
+        <div class="col-12 col-md-6">
+            <h1>{{ playera.name }}</h1>
+            <p>{{playera.description}}</p>
+            <p class="mt-3">
+                {% if playera.on_offer %}
+                    <span class="text-primary fw-bold fs-4">Q{{ playera.offer_price }}</span>
+                    <span class="text-decoration-line-through text-muted fs-6">Q{{ playera.sale_price }}</span>
+                {% else %}
+                    <span class="text-primary fw-bold fs-4">Q{{ playera.sale_price }}</span>
+                {% endif %}
+            </p>
+            <p>
+                {% for tag in playera.tags.all %}
+                    <span class="badge bg-primary text-light">{{ tag.name }}</span>
+                {% endfor %}
+            </p>
+            
+            <!-- Descripción estática -->
+            <div class="mt-4">
+                <h5>Detalles</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">Tela<span class="badge text-bg-success rounded-pill ms-2">Algodón</span></li>
+                    <li class="list-group-item">Talla<span class="badge text-bg-success rounded-pill ms-2">Cualquiera</span> </li>
+                    <li class="list-group-item">Color de playera<span class="badge text-bg-success rounded-pill ms-2">Blanco</span> <span class="badge text-bg-success rounded-pill">Negro</span></li>
+                    <li class="list-group-item">Diseño<span class="badge text-bg-success rounded-pill ms-2">Estampado</span> </li>
+                    <li class="list-group-item">Personalización<span class="badge text-bg-success rounded-pill ms-2"> Sí</span></li>
+                </ul>
+            </div>
+            <div class="mt-2">
+                <div class="alert alert-secondary" role="alert">
+                    Puede elegir la(s) talla(s), color de playera(s) y personalizarla (dependiendo el diseño)
+                    *Aplican restricciones
+                  </div>
+            </div>
+            <!-- Botón de compra -->
+            <div class="mt-4">
+                <a href="https://wa.me/50251664671/?text=Me%20Interesa%20Esto%20{{url_complete}}" class="btn btn-success w-100" target="_blank">Realizar Pedido 
+                    <span class="bi bi-whatsapp"></span>
+                    
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Configuración de Fancybox -->
+<script>
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // Configuración personalizada (opcional)
+    });
+</script>
+
+{% include 'products/design/public/design_related.html' %}
+{% endblock %}

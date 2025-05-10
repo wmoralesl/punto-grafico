@@ -1,0 +1,38 @@
+{% extends "private/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Lista de Pedidos</h1>
+    <a href="{% url 'orders:create' %}" class="btn btn-primary mb-3">Nuevo Pedido</a>
+
+    <div id="app">
+        <div v-if="load">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.client.name }}</td>
+                        <td>{{ order.date }}</td>
+                        <td>Q{{ order.total }}</td>
+                        <td>
+                            <a href="{% url 'orders:detail' order.id %}" class="btn btn-sm btn-info">Ver</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

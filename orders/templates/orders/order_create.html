@@ -1,0 +1,142 @@
+{% extends "private/base.html" %}
+{% block head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Nuevo Pedido</h1>
+    <a href="{% url 'orders:list' %}" class="btn btn-secondary mb-3">Regresar</a>
+    
+    <div id="app">
+        <form @submit.prevent="submitOrder">
+            <div class="mb-3">
+                <label class="form-label">Cliente</label>
+                <select class="form-select" v-model="order.client" required>
+                    <option v-for="client in clients" :value="client.id">[[ client.name ]] ([[ client.phone ]])</option>
+                </select>
+            </div>
+            
+            <h4>Líneas del Pedido</h4>
+            <div class="mb-3 border p-3" v-for="(line, index) in order.lines" :key="index">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" class="form-control" v-model="line.description" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" class="form-control" v-model="line.quantity" min="1" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Precio Unitario</label>
+                        <input type="number" step="0.01" class="form-control" v-model="line.unit_price" min="0" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Subtotal</label>
+                        <input type="text" class="form-control" :value="calculateSubtotal(line)" readonly>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger" @click="removeLine(index)">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" class="btn btn-primary mb-3" @click="addLine">Añadir Línea</button>
+            
+            <div class="mb-3">
+                <h4>Total: Q[[ calculateTotal() ]]</h4>
+            </div>
+            
+            <button type="submit" class="btn btn-success">Guardar Pedido</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    axios.defaults.headers.common['X-CSRFToken'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
+    const { createApp, ref, onMounted } = Vue
+    
+    createApp({
+        delimiters: ['[[', ']]'],
+        setup() {
+            const clients = ref([])
+            const order = ref({
+                client: null,
+                lines: [{
+                    description: '',
+                    quantity: 1,
+                    unit_price: 0
+                }]
+            })
+            
+            const fetchClients = async () => {
+                try {
+                    const response = await axios.get('http://localhost:8000/admin/o/api/clients/')
+                    clients.value = response.data
+                } catch (error) {
+                    console.error('Error fetching clients:', error)
+                }
+            }
+            
+            const addLine = () => {
+                order.value.lines.push({
+                    description: '',
+                    quantity: 1,
+                    unit_price: 0
+                })
+            }
+            
+            const removeLine = (index) => {
+                order.value.lines.splice(index, 1)
+            }
+            
+            const calculateSubtotal = (line) => {
+                return (line.quantity * line.unit_price).toFixed(2)
+            }
+            
+            const calculateTotal = () => {
+                return order.value.lines.reduce((total, line) => {
+                    return total + (line.quantity * line.unit_price)
+                }, 0).toFixed(2)
+            }
+            
+            const submitOrder = async () => {
+                try {
+                    const payload = {
+                        client: order.value.client,
+                        lines: order.value.lines
+                    }
+                    console.log(payload)
+                    const response = await axios.post('http://localhost:8000/admin/o/api/orders/', payload)
+                    alert('Pedido creado exitosamente!')
+                    window.location.href = `/admin/o/detail/${response.data.id}`
+                } catch (error) {
+                    console.error('Error creating order:', error)
+                    alert('Error al crear el pedido')
+                }
+            }
+            
+            onMounted(() => {
+                fetchClients()
+            })
+            
+            return {
+                clients,
+                order,
+                addLine,
+                removeLine,
+                calculateSubtotal,
+                calculateTotal,
+                submitOrder
+            }
+        }
+    }).mount('#app')
+</script>
+{% endblock %}

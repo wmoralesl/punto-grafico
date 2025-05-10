@@ -1,0 +1,42 @@
+{% extends 'private/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-3">
+    <div class="card position-relative">
+        <!-- Imagen de portada -->
+        <div class="card-header p-0">
+          <div class="bg-dark" style="height: 200px; background-size: cover; background-position: center;"></div>
+      </div>
+<!-- Menú desplegable en la esquina superior derecha -->
+<div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+  <button 
+      class="btn btn-dark dropdown-toggle" 
+      type="button" 
+      id="actionMenuButton" 
+      data-bs-toggle="dropdown" 
+      aria-expanded="false">
+      <i class="bi bi-three-dots-vertical"></i>
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionMenuButton"> 
+    
+    <li><a class="dropdown-item" href="{% url 'private:update_profile' %}">
+      <i class="bi bi-pencil-square me-2"></i>
+      Editar perfil
+    </a></li>
+    <li><a class="dropdown-item" href="{% url 'private:update_password' %}">
+      <i class="bi bi-person-lock me-2"></i>
+      Cambiar contraseña
+    </a></li>
+
+    <li><a class="dropdown-item" href="{% url 'private:view_my_actions' %}">
+      <i class="bi bi-clock-history me-2"></i>
+      Historial de cambios
+    </a></li>
+
+  </ul>
+</div>
+        {% include 'users/components/user_card.html' %}
+</div>
+</div>  
+{% endblock content %}

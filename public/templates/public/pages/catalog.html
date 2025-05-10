@@ -1,0 +1,112 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block title %}
+Catálogo
+{% endblock %}
+
+{% block content %}
+{% include 'public/frames/navbar.html' %}
+
+<div class="container my-3">
+    <h1 class="text-center mb-2">Catálogo</h1>
+        <form method="get" action="{% url 'public:catalog' %}">
+            <!-- Búsqueda -->
+            <div class="input-group mb-3">
+                <a
+                    class="btn btn-outline-secondary input-group-text" 
+                    data-bs-toggle="collapse"
+                    href="#filterCollapse"
+                    role="button"
+                    aria-expanded="false"
+                    aria-controls="filterCollapse"
+                >
+                    <i class="bi bi-funnel"></i>
+                </a>
+                <input 
+                    type="text" 
+                    name="q" 
+                    id="q" 
+                    class="form-control" 
+                    placeholder="Buscar diseño"
+                    value="{{ request.GET.q|default:'' }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                    </button>
+            </div>
+            
+            <!-- Etiquetas -->
+            <div class="mb-3">
+                <div class="collapse"  id="filterCollapse">
+                    {% for tag in tags %}
+                        <div class="d-inline-block mb-3">
+                            <input 
+                            class="btn-check" 
+                            type="checkbox" 
+                            name="tags" 
+                            value="{{ tag.name }}" 
+                            id="btn-check-{{ tag.id }}"
+                            {% if tag.name in selected_tags %}checked{% endif %}
+                            autocomplete="off"
+                            >
+                            <label class="btn" for="btn-check-{{ tag.id }}">
+                                {{ tag.name }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-primary" type="submit">Aplicar Filtros</button>
+
+                    <a class="btn btn-outline-danger" href="{% url 'public:catalog' %}">Eliminar Filtros</a>
+                </div>
+            </div>
+        </form>
+            <!-- Productos -->
+            
+                <div class="row">
+
+               
+                    {% for playera in playeras %}
+                        <div class="col-6 col-md-4 col-lg-3 mb-3">
+                            <div class="card h-100" onclick="window.location.href='{% url 'products:design_detail' playera.public %}'" style="cursor: pointer;">
+                                <img src="{{ playera.image.url }}" class="card-img-top" alt="{{ playera.name }}">
+                                
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ playera.name }}</h5>
+                                    <p class="card-text">
+                                        {% if playera.on_offer %}
+                                        <span class="text-primary fw-bold fs-4">Q{{ playera.offer_price }}</span>
+                                        <span class="text-decoration-line-through text-muted fs-6">Q{{ playera.sale_price }}</span>
+                                            {% else %}
+                                            <span class="text-primary fw-bold fs-4">Q{{ playera.sale_price }}</span>
+                                        {% endif %}
+
+                                    </p>
+                                    <!-- <p class="card-text">
+                                        {% for tag in playera.tags.all %}
+                                            <span class="badge bg-primary text-light">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </p> -->
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="position-relative" style="height: 50vh;">
+
+                            <div class="position-absolute top-50 start-50 translate-middle">
+                                <span class="text-muted h3">No se encontraron resultados</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                
+                <!-- Controles de paginación -->
+                {% include 'public/frames/catalog_pagination.html' %}
+                
+            
+        
+    </div>
+    {% include 'public/frames/footer.html' %}
+
+{% endblock %}

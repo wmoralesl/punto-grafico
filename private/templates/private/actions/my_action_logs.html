@@ -1,0 +1,12 @@
+{% extends 'private/base.html' %}
+
+{% block content %}
+
+    <h2 class="text-center mb-4">Mi Historial de Acciones</h2>
+    {% include 'private/actions/action_log.html' %}
+        <div class="d-flex justify-content-center mt-4">
+            <a class="btn btn-primary" href="{% url 'private:view_profile' %}">
+                <i class="bi bi-arrow-left me-2"></i>
+                Regresar</a>
+        </div>
+{% endblock %}

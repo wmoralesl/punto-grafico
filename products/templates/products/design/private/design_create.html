@@ -1,0 +1,59 @@
+{% extends 'private/base.html' %}
+
+{% block content %}
+{% if form.instance.image %}
+    <div class="mb-3">
+        <label>Imagen actual:</label>
+        <div>
+            <img src="{{ form.instance.image.url }}" alt="Imagen actual" class="img-thumbnail" style="max-width: 200px;">
+        </div>
+    </div>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        {{ form.image.label_tag }} {{ form.image }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.name.label_tag }} {{ form.name }}
+    </div>
+
+    <div class="form-group">
+        {{ form.description.label_tag }} {{ form.description }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.sale_price.label_tag }} {{ form.sale_price }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.offer_price.label_tag }} {{ form.offer_price }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        {{ form.tags.label_tag }} {{ form.tags }}
+    </div>
+
+    <div class="form-group">
+        {{ form.new_tag.label_tag }} {{ form.new_tag }}
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.on_offer.id_for_label }}" class="font-weight-bold">En Oferta</label>
+        <div class="form-check form-switch">
+            {{ form.on_offer }}
+        </div>
+    </div>
+    <a class="btn" href="{% url 'products:design_list' %}">Regresar</a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+
+{% endblock %}

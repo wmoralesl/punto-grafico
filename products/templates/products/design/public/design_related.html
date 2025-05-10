@@ -1,0 +1,26 @@
+<div class="container my-5">
+    <h3 class="mb-4">Podrían interesarte</h3>
+    <div class="row">
+        {% for design in related_designs %}
+            <div class="col-12 col-md-4 col-lg-3 mb-4">
+                <div class="card h-100" onclick="window.location.href='{% url 'products:design_detail' design.public %}'" style="cursor: pointer;">
+                    
+                    <img src="{{ design.image.url }}" class="card-img-top" alt="{{ design.name }}">
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ design.name }}</h5>
+                        <p class="card-text">
+                            {% if design.on_offer %}
+                            <span class="text-primary fw-bold fs-4">Q{{ design.offer_price }}</span>
+                            <span class="text-decoration-line-through text-muted fs-6">Q{{ design.sale_price }}</span>
+                                {% else %}
+                                <span class="text-primary fw-bold fs-4">Q{{ design.sale_price }}</span>
+                            {% endif %}
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

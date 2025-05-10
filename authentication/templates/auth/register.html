@@ -1,0 +1,79 @@
+{% extends 'public/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="card p-4 mt-3">
+            <h2 class="text-center">Registrar Usuario</h2>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name|add_class:"form-control" }}
+                </div>
+                <div class="mb-3">
+                    {{ form.second_last_name.label_tag }}
+                    {{ form.second_last_name|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.phone_number.label_tag }}
+                    {{ form.phone_number|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.date_of_birth.label_tag }}
+                    {{ form.date_of_birth|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form.gender.label_tag }}
+                    {{ form.gender|add_class:"form-control" }}
+                </div>
+
+                <div class="mb-3 position-relative">
+                    {{ form.password1.label_tag }}
+                    <div class="input-group">
+                        {{ form.password1|add_class:"form-control" }}
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword1">
+                                <i class="bi bi-eye" id="togglePasswordIcon1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 position-relative">
+                    {{ form.password2.label_tag }}
+                    <div class="input-group">
+                        {{ form.password2|add_class:"form-control" }}
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword2">
+                                <i class="bi bi-eye" id="togglePasswordIcon2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{% url 'public:home' %}">Salir</a>
+            </div>
+        </div>
+    </div>
+    {% include 'auth/show_password.html' with buttonId="togglePassword1" passwordSelector="[name='password1']" iconId="togglePasswordIcon1" %}
+    {% include 'auth/show_password.html' with buttonId="togglePassword2" passwordSelector="[name='password2']" iconId="togglePasswordIcon2" %}
+{% endblock %}

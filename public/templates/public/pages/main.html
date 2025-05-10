@@ -1,0 +1,86 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block title %}
+{% if organization.name %}
+        {{ organization.name }}
+    {% else %}
+        Nuestra Organizacion
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+<style>
+  .full-height {
+    height: 100vh;
+    background-image: url("{% if organization.banner %}{{ organization.banner.url }}{% else %}https://placehold.co/1920x1080/{% endif %}"); /* Cambia por tu URL */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  .overlay {
+    background: rgba(0, 0, 0, 0.5); /* Oscurece la imagen de fondo */
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="full-height">
+    <div class="overlay">
+      <h1 class="display-4">{{ organization.name }}</h1>
+      <p class="lead">{{ organization.description }}</p>
+      <a href="{% url 'public:catalog' %}" class="btn btn-outline-light btn-lg">Ver Catálogo</a>
+    </div>
+  </div>
+
+  <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path fill="#f3f4f5" fill-opacity="1" d="M0,288L34.3,266.7C68.6,245,137,203,206,170.7C274.3,139,343,117,411,138.7C480,160,549,224,617,250.7C685.7,277,754,267,823,250.7C891.4,235,960,213,1029,208C1097.1,203,1166,213,1234,186.7C1302.9,160,1371,96,1406,64L1440,32L1440,0L1405.7,0C1371.4,0,1303,0,1234,0C1165.7,0,1097,0,1029,0C960,0,891,0,823,0C754.3,0,686,0,617,0C548.6,0,480,0,411,0C342.9,0,274,0,206,0C137.1,0,69,0,34,0L0,0Z"></path>
+  </svg>  
+  <div class="container text-center py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <h5 class="fw-bold">Diseños Disponibles</h5>
+        <p class="fs-1 fw-bold text-success py-2 px-4 d-inline-block"> <span id="designsCount">0</span></p>
+      </div>
+      <div class="col-md-4">
+        <h5 class="fw-bold">Años de experiencia</h5>
+        <p  class="fs-1 fw-bold text-success  py-2 px-4 d-inline-block">+<span id="experienceCount">0</span></p>
+      </div>
+      <div class="col-md-4">
+        <h5 class="fw-bold">Playeras Realizadas</h5>
+        <p class="fs-1 fw-bold text-success py-2 px-4 d-inline-block">+<span id="businessCount" >0</span></p>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- <script>
+    function animateCounter(id, target, duration) {
+        let element = document.getElementById(id);
+        let start = 0;
+        let increment = target / (duration / 10);
+        let interval = setInterval(() => {
+            start += increment;
+            element.textContent = Math.floor(start);
+            if (start >= target) {
+                element.textContent = target;
+                clearInterval(interval);
+            }
+        }, 10);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        animateCounter("designsCount", {{ all_desings|default:0 }}, 1500);
+        animateCounter("experienceCount", 2, 1000);
+        animateCounter("businessCount",  200 , 5000);
+    });
+</script> -->
+{% endblock %}

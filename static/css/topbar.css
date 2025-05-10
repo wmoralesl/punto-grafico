@@ -1,0 +1,17 @@
+.avatar {
+    object-fit: cover; /* Asegura que la imagen se recorte para llenar el contenedor */
+    width: 34px; /* Asegúrate de que el tamaño sea consistente */
+    height: 34px;
+    border-radius: 50%; /* Hace que la imagen sea circular */
+  }
+  
+.avatar-lg{
+  object-fit: cover; /* Asegura que la imagen se recorte para llenar el contenedor */
+    width: 24vh; /* Asegúrate de que el tamaño sea consistente */
+    height: 24vh;
+    border-radius: 50%;
+}
+
+.dropdown-toggle::after {
+  content: none; /* Elimina el contenido de la flechita */
+}

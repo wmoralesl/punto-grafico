@@ -1,0 +1,95 @@
+{% extends "private/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Detalle de Pedido</h1>
+    <a href="{% url 'orders:list' %}" class="btn btn-secondary mb-3">Regresar</a>
+    
+    <div id="app">
+        <div v-if="loading" class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+        
+        <div v-else>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>Pedido #[[ order.id ]]</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Cliente:</strong> [[ order.client_info.name ]]</p>
+                            <p><strong>Teléfono:</strong> [[ order.client_info.phone ]]</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Fecha:</strong> [[ order.date ]]</p>
+                            <p><strong>Total:</strong> Q [[ order.total ]]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h4>Líneas del Pedido</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="line in order.lines" :key="line.id">
+                        <td>[[ line.description ]]</td>
+                        <td>[[ line.quantity ]]</td>
+                        <td>$[[ line.unit_price ]]</td>
+                        <td>$[[ (line.quantity * line.unit_price).toFixed(2) ]]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    const { createApp, ref, onMounted } = Vue
+    
+    createApp({
+        delimiters: ['[[', ']]'],
+        setup() {
+            const order = ref({})
+            const loading = ref(true)
+            
+            const fetchOrder = async () => {
+                try {
+                    const orderId = window.location.pathname.split('/').pop()
+                    console.log(orderId)
+                    const response = await axios.get(`http://localhost:8000/admin/o/api/orders/{{object.id}}/`)
+                    order.value = response.data
+                    loading.value = false
+                } catch (error) {
+                    console.error('Error fetching order:', error)
+                    loading.value = false
+                }
+            }
+            
+            onMounted(() => {
+                fetchOrder()
+            })
+            
+            return {
+                order,
+                loading
+            }
+        }
+    }).mount('#app')
+</script>
+{% endblock %}

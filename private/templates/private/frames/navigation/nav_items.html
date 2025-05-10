@@ -1,0 +1,44 @@
+{% load static %}
+<a href="{% url 'private:home' %}" class="navbar-brand text-light mb-4">
+    {% if organization.logo %}
+    <img src="{{ organization.logo.url }}" alt="logo de organizacion" width="36" height="36" >
+{% else %}
+    <img src="{% static 'img/untils/noimage.jpg' %}" alt="logo de organizacion" width="36" height="36" >
+{% endif %}
+
+ {{organization.name}}
+  </a>
+  
+  <ul class="nav nav-pills flex-column mt-4">
+    <li class="nav-item">
+      <a href="{% url 'private:home' %}" class="nav-link text-light {% if request.path == '/admin/' %}active{% endif %}">
+        <i class="bi bi-speedometer2 me-2"></i> Inicio
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'users:list' %}" class="nav-link text-light {% if '/u/' in request.path %}active{% endif %}">
+        <i class="bi bi-people me-2"></i> Usuarios
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'products:design_list' %}" class="nav-link text-light {% if '/d/' in request.path %}active{% endif %}">
+        <i class="bi bi-card-image me-2"></i> Diseños
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'orders:list' %}" class="nav-link text-light {% if '/o/' in request.path %}active{% endif %}">
+        <i class="bi bi-file-earmark-text me-2"></i> Pedidos
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'clients:client_list' %}" class="nav-link text-light {% if '/c/' in request.path %}active{% endif %}">
+        <i class="bi bi-people me-2"></i> Clientes
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'private:view_configuration' %}" class="nav-link text-light {% if '/config/' in request.path %}active{% endif %}">
+        <i class="bi bi-gear me-2"></i> Configuración
+      </a>
+    </li>
+
+  </ul>

@@ -1,0 +1,49 @@
+{% load static %}
+<nav class=" navbar navbar-expand-lg  bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center pb-2" href="/">
+      {% if organization.logo %}
+      <img height="30" src="{{ organization.logo.url }}" alt="Logo de organización" class="me-2">
+      {% else %}
+      <img height="30" src="{% static 'img/untils/noimage.jpg' %}" alt="Logo de organización" class="me-2">
+      {% endif %}
+      <span>{{ organization.name }}</span>
+    </a>
+    
+    <!-- Botón de colapso -->
+    <button class="navbar-toggler mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Contenido del menú -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Links de navegación -->
+      <ul class="navbar-nav nav-pills me-auto mb-2 mb-lg-0 ">
+        <li class="nav-item">
+          <a class="nav-link ps-2 {% if '/catalogo/' in request.path %}text-light active{% endif %}" href="{% url 'public:catalog' %}">Catálogo</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link ps-2 {% if request.path == '/nosotros/' %} text-light active{% endif %}" href="{% url 'public:about_us' %}">Sobre Nosotros</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link ps-2 {% if request.path == '/preguntas/' %} text-light active{% endif %}" href="{% url 'public:questions' %}">Preguntas Frecuentes</a>
+        </li> -->
+      </ul>
+
+      <!-- Botones de sesión -->
+      <div class="d-flex">
+        {% if user.is_authenticated %}
+        <a href="{% url 'private:home' %}" class="btn btn-outline-primary me-2 w-100">
+          <i class="bi bi-person-circle me-2"></i>
+
+          Administración</a>
+        {% else %}
+        <a href="{% url 'auth:login' %}" class="btn btn-outline-primary me-2 w-100">
+          <i class="bi bi-person-circle me-1"></i>
+
+          Iniciar Sesión</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>

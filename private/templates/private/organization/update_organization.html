@@ -1,0 +1,16 @@
+{% extends 'private/base.html' %}
+
+
+{% block content %}
+
+    <h1>Editar Configuración</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <a  class="btn btn-outline-primary" href="{% url 'private:view_configuration' %}">Regresar</a>
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+</form>
+
+
+{% endblock %}

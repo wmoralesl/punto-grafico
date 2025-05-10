@@ -1,0 +1,81 @@
+{% extends 'private/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-3">
+    <div class="card position-relative">
+        <!-- Imagen de portada -->
+        <div class="card-header p-0">
+            <div class="bg-dark" style="height: 200px; background-size: cover; background-position: center;"></div>     
+        </div>
+<!-- Menú desplegable en la esquina superior derecha -->
+ {% if request.user.role == 'admin' %}
+<div class="dropdown position-absolute" style="top: 10px; right: 10px;">
+  <button 
+      class="btn btn-dark dropdown-toggle" 
+      type="button" 
+      id="actionMenuButton" 
+      data-bs-toggle="dropdown" 
+      aria-expanded="false">
+      <i class="bi bi-three-dots-vertical"></i>
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="actionMenuButton"> 
+
+    <li><a class="dropdown-item" href="{% url 'users:update' user.pk %}">
+        <i class="bi bi-pencil-square me-2"></i>
+        Editar perfil
+    </a></li>
+    <li>
+        <form action="{% url 'users:desactivar' user.pk %}" method="POST" style="display:inline;" id="deleteForm{{ user.pk }}">
+            {% csrf_token %}
+            <a 
+              href="#" 
+              class="dropdown-item" 
+              onclick="confirmDelete(event, {{ user.pk }})"
+            >
+              <i class="bi bi-trash3 me-2"></i>
+              Eliminar perfil
+            </a>
+        </form>
+      </li>
+    
+  </ul>
+</div>
+{% endif %}
+        {% include 'users/components/user_card.html' %}
+        <div class="d-flex justify-content-center mb-4">
+            <a class="btn btn-primary" href="{% url 'users:list' %}">
+                <i class="bi bi-arrow-left me-2"></i>
+                Regresar</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(event, userId) {
+  event.preventDefault(); // Evitar que el enlace se ejecute
+  const deleteForm = document.getElementById(`deleteForm${userId}`);
+
+  if (!deleteForm) {
+    console.error("Formulario no encontrado para el usuario con ID:", userId);
+    return;
+  }
+
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "¡No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteForm.submit(); // Enviar el formulario
+    }
+  });
+}
+
+  </script>
+{% endblock %}
