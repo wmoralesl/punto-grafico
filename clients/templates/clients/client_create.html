@@ -1,0 +1,10 @@
+{% extends "private/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<form method="POST">
+    {{ form }}
+    {% csrf_token %}
+    <button type="submit">Confirmar</button>
+</form>
+{% endblock %}

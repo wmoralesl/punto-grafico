@@ -4,7 +4,7 @@
 <h1 class="mb-4 text-center">Usuarios</h1>
 <div class="d-flex justify-content-between align-items-center mb-4">
     {% if request.user.role == 'admin' %}
-    <a class="btn btn-primary" href="{% url 'users:create' %}">
+    <a class="btn btn-primary" href="{% url 'clients:client_create' %}">
         <i class="bi bi-person-plus"></i> Crear Cliente
     </a>
     {% else %}
