@@ -3,8 +3,19 @@
 
 {% block content %}
 <form method="POST">
-    {{ form }}
     {% csrf_token %}
-    <button type="submit">Confirmar</button>
+    <h1 class="mb-4 text-center">Formulario Cliente</h1>
+    <div class="row mb-3">
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.name.id_for_label }}" class="form-label">Nombre</label>
+            {{ form.name|add_class:"form-control" }}
+        </div>
+        <div class="col-12 col-md-6  form-group">
+            <label for="{{ form.phone.id_for_label }}" class="form-label">Teléfono</label>
+            {{ form.phone|add_class:"form-control" }}
+        </div>
+    </div>
+    <a class="btn btn-outline-primary" href="{% url 'clients:client_list' %}">Regresar</a>
+    <button class="btn btn-primary" type="submit">Confirmar</button>
 </form>
 {% endblock %}
