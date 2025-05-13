@@ -1,7 +1,7 @@
 {% extends 'private/base.html' %}
 {% block content %}
 
-<h1 class="mb-4 text-center">Usuarios</h1>
+<h1 class="mb-4 text-center">Clientes</h1>
 <div class="d-flex justify-content-between align-items-center mb-4">
     {% if request.user.role == 'admin' %}
     <a class="btn btn-primary" href="{% url 'clients:client_create' %}">
@@ -18,7 +18,7 @@
                 type="text" 
                 name="q" 
                 class="form-control" 
-                placeholder="Buscar usuario..." 
+                placeholder="Buscar cliente..." 
                 value="{{ request.GET.q }}">
             <button type="submit" class="btn btn-primary">
                 <i class="bi bi-search "></i>
