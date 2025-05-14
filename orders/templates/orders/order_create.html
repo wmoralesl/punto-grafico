@@ -4,18 +4,19 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <h1>Nuevo Pedido</h1>
-    <a href="{% url 'orders:list' %}" class="btn btn-secondary mb-3">Regresar</a>
-    
+    <h1 class="mb-4 text-center">Nuevo Pedido</h1>
+
     <div id="app">
         <form @submit.prevent="submitOrder">
-            <div class="mb-3">
+            <div class="row">
+                <div class="col-6 mb-3">
                 <label for="clientName" class="form-label">Nombre del Cliente</label>
                 <input type="text" class="form-control" id="clientName" v-model="clientData.name" required>
             </div>
-            <div class="mb-3">
+            <div class="col-6 mb-3">
                 <label for="clientPhone" class="form-label">Teléfono del Cliente</label>
                 <input type="text" class="form-control" id="clientPhone" v-model="clientData.phone" @change="checkClient" required>
+            </div>
             </div>
             
             <div class="mb-3" v-if="existingClient">
@@ -27,14 +28,16 @@
             <h4>Líneas del Pedido</h4>
             <div class="mb-3 border p-3" v-for="(line, index) in order.lines" :key="index">
                 <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label">Descripción</label>
-                        <input type="text" class="form-control" v-model="line.description" required>
-                    </div>
                     <div class="col-md-2">
                         <label class="form-label">Cantidad</label>
                         <input type="number" class="form-control" v-model="line.quantity" min="1" required>
                     </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" class="form-control" v-model="line.description" required>
+                    </div>
+                    
                     <div class="col-md-3">
                         <label class="form-label">Precio Unitario</label>
                         <input type="number" step="0.01" class="form-control" v-model="line.unit_price" min="0" required>

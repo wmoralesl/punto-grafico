@@ -2,8 +2,10 @@
 
 {% block content %}
 <div class="container">
-    <h1>Lista de Pedidos</h1>
-    <a href="{% url 'orders:create' %}" class="btn btn-primary mb-3">Nuevo Pedido</a>
+    <h1 class="mb-4 text-center">Lista de Pedidos</h1>
+    <a href="{% url 'orders:create' %}" class="btn btn-primary mb-3">
+        <i class="bi bi-plus-circle"></i>
+        Nuevo Pedido</a>
 
     <div id="app">
         <div v-if="load">
