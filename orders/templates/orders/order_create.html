@@ -10,11 +10,11 @@
         <form @submit.prevent="submitOrder">
             <div class="row">
                 <div class="col-6 mb-3">
-                <label for="clientName" class="form-label">Nombre del Cliente</label>
+                <label for="clientName" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="clientName" v-model="clientData.name" required>
             </div>
             <div class="col-6 mb-3">
-                <label for="clientPhone" class="form-label">Teléfono del Cliente</label>
+                <label for="clientPhone" class="form-label">Teléfono</label>
                 <input type="text" class="form-control" id="clientPhone" v-model="clientData.phone" @change="checkClient" required>
             </div>
             </div>
