@@ -34,7 +34,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     raise_exception = False
 
     def form_invalid(self, form):
-        messages.error(self.request, "Error al crear el cliente. Por favor, verifica los datos ingresados.", extra_tags='error')
+        messages.error(self.request, "Hubo un error al crear el cliente. Por favor, verifica los datos ingresados.", extra_tags='error')
         return super().form_invalid(form)
     
     def form_valid(self, form):
