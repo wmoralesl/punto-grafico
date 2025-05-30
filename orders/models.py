@@ -4,12 +4,15 @@ from clients.models import Client
 
 # Create your models here.
 
-
-
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT)
     date = models.DateField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    request_date = models.DateField()
+    deadline = models.DateField()
+    anticipo = models.IntegerField()
+    created=models.DateTimeField(auto_now_add=True)
+    updated=models.DateField(auto_now=True)
     def __str__(self):
         return f"Order #{self.id} - {self.client.name}"
 
