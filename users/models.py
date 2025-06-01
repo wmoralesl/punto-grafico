@@ -35,7 +35,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='creator')
     email = models.EmailField(unique=True, null=False, blank=False)
     username = models.CharField(max_length=255, null=True, blank=True)
-    ubication = models.CharField(max_length=255, choices=UBICATION_CHOICES, null=True, blank=True)
+    ubication = models.CharField(max_length=255, choices=UBICATION_CHOICES, default='sl', null=True, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,0 +1,12 @@
+{% extends 'private/base.html' %}
+
+{% block content %}
+<h1>Empleados</h1>
+
+{% for employee in employees %}
+
+<p>{{employee.name}} {{employee.get_ubication_display  }}</p>
+
+
+{% endfor %}
+{% endblock %}

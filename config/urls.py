@@ -34,6 +34,7 @@ urlpatterns = [
         path('config/backup/', include("db_backup.urls")),
         path('o/', include("orders.urls")),
         path('c/', include("clients.urls")),
+        path('e/', include("employee.urls")),
     ])),
     path('super/', admin.site.urls),
     
