@@ -82,6 +82,13 @@
                 <label for="">Anticipo</label>
                 <input type="number" class="form-control" v-model="order.anticipo" min="0">
             </div>
+
+            <div>
+                <select class="form-select" v-model="order.employee" required>
+                    <option value="" disabled selected>Seleccione un empleado</option>
+                    <option v-for="employee in employees" :value="employee.id">[[ employee.name ]]</option>
+                </select>
+            </div>
             <div class="mb-3">
                 <h4>Total: Q[[ calculateTotal() ]]</h4>
             </div>
@@ -113,6 +120,7 @@
         setup() {
             const today = new Date().toISOString().split('T')[0] // Formato YYYY-MM-DD
             const clients = ref([])
+            const employees = ref([])
             const existingClient = ref(null)
             const clientData = ref({
                 name: '',
@@ -123,6 +131,7 @@
                 anticipo: null,
                 request_date: today,
                 deadline: null,
+                employee: null,
                 lines: [{
                     description: '',
                     quantity: 1,
@@ -136,6 +145,15 @@
                     clients.value = response.data
                 } catch (error) {
                     console.error('Error fetching clients:', error)
+                }
+            }
+
+            const fetchEmployees = async () =>{
+                try{
+                    const response = await axios.get('http://localhost:8000/admin/o/api/employees/')
+                    employees.value = response.data
+                } catch (error) {
+                    console.error('Error fetching employees:', error)
                 }
             }
             
@@ -216,6 +234,7 @@
                         request_date: order.value.request_date,
                         deadline: order.value.deadline,
                         client: order.value.client,
+                        responsible: order.value.employee,
                         lines: order.value.lines
                     }
                     
@@ -230,10 +249,12 @@
             
             onMounted(() => {
                 fetchClients()
+                fetchEmployees()
             })
             
             return {
                 clients,
+                employees,
                 clientData,
                 existingClient,
                 order,

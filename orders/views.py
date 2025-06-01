@@ -5,8 +5,8 @@ from django.views.generic import TemplateView, DetailView, ListView
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from .models import Client, Order, OrderLine
-from .serializers import ClientSerializer, OrderSerializer, OrderDetailSerializer, OrderLineSerializer
-
+from .serializers import ClientSerializer, OrderSerializer, OrderDetailSerializer, OrderLineSerializer, EmployeeSerializer
+from employee.models import Employee
 # Create your views here.
 
 class OrderListView(ListView):
@@ -24,6 +24,11 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
 
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['name']
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()
