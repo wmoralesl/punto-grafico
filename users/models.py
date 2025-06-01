@@ -9,6 +9,7 @@ def generate_random_id():
 
 class User(AbstractUser):
     ROLE_CHOICES = (
+        ('invited', 'Invitado'),
         ('creator', 'Creador'),
         ('admin', 'Administrador'),
     )
@@ -16,6 +17,11 @@ class User(AbstractUser):
     ('male', 'Masculino'),
     ('female', 'Femenino'),
     ('prefer_not_to_say', 'Prefiero no decirlo'),
+    )
+
+    UBICATION_CHOICES = (
+        ('sl', 'San Luis'),
+        ('ip', 'Ipala'),
     )
     id = models.CharField(primary_key=True, max_length=64, unique=True, default=generate_random_id)
     first_name = models.CharField(max_length=255, null=True, blank=True)
@@ -29,7 +35,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='creator')
     email = models.EmailField(unique=True, null=False, blank=False)
     username = models.CharField(max_length=255, null=True, blank=True)
-    
+    ubication = models.CharField(max_length=255, choices=UBICATION_CHOICES, null=True, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
