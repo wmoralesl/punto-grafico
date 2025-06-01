@@ -73,8 +73,14 @@
             
             <button type="button" class="btn btn-primary mb-3" @click="addLine">Añadir Línea</button>
             <div>
+                <input class="form-control" type="date" name="request_date" v-model="order.request_date" placeholder="Fecha Solicitada" required>
+
+                <input class="form-control" type="date" name="deadline" v-model="order.deadline" placeholder="Fecha de Entrega" required>
+
+            </div>
+            <div>
                 <label for="">Anticipo</label>
-                <input type="number" class="form-control" v-model="order.anticipo" min="0" step="5">
+                <input type="number" class="form-control" v-model="order.anticipo" min="0">
             </div>
             <div class="mb-3">
                 <h4>Total: Q[[ calculateTotal() ]]</h4>
@@ -105,6 +111,7 @@
     createApp({
         delimiters: ['[[', ']]'],
         setup() {
+            const today = new Date().toISOString().split('T')[0] // Formato YYYY-MM-DD
             const clients = ref([])
             const existingClient = ref(null)
             const clientData = ref({
@@ -114,6 +121,8 @@
             const order = ref({
                 client: null,
                 anticipo: null,
+                request_date: today,
+                deadline: null,
                 lines: [{
                     description: '',
                     quantity: 1,
@@ -203,6 +212,9 @@
                     }
                     
                     const payload = {
+                        anticipo: order.value.anticipo,
+                        request_date: order.value.request_date,
+                        deadline: order.value.deadline,
                         client: order.value.client,
                         lines: order.value.lines
                     }
