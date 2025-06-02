@@ -129,7 +129,7 @@
                     <h6>Anticipo</h6>
                 </div>
                 <div class="col-6 col-md-2">
-                    <input type="number" class="form-control" v-model="order.anticipo" min="0">
+                    <input type="number" class="form-control" v-model="order.anticipo" min="0" required>
                 </div>
             </div>
             <hr>
@@ -219,6 +219,10 @@
                     unit_price: 0
                 }]
             })
+
+            const normalizePhone = (phone) => {
+    return phone.replace(/\D/g, '')  // Quita todo lo que no sea número
+}
             
             const fetchClients = async () => {
                 try {
@@ -260,9 +264,12 @@
                 return
             }
 
+            // Normaliza solo si el input activo es teléfono
+        const searchTerm = activeInput.value === 'phone' ? normalizePhone(term) : term
+
             try {
                 const response = await axios.get('http://localhost:8000/admin/o/client-suggestions/', {
-                params: { term },
+                params: { term: searchTerm },
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
             clientSuggestions.value = response.data
@@ -284,7 +291,8 @@
 
            
             const checkClient = async () => {
-                if (!clientData.value.phone) return
+                const phone = normalizePhone(clientData.value.phone)
+                if (!phone) return
                 
                 try {
                     // Buscar cliente por teléfono
@@ -312,7 +320,8 @@
                 try {
                     const response = await axios.post('http://localhost:8000/admin/o/api/clients/', {
                         name: clientData.value.name,
-                        phone: clientData.value.phone
+                        phone: normalizePhone(clientData.value.phone)
+
                     })
                     return response.data
                 } catch (error) {
@@ -398,8 +407,10 @@
                 selectClientSuggestion,
                 activeInput,
                 dropdownStyle,
-                updateDropdownPosition
-                
+                updateDropdownPosition,
+                normalizePhone,
+
+
             }
         }
     }).mount('#app')
