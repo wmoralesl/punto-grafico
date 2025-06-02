@@ -10,35 +10,48 @@
 
     <div id="app">
         <form @submit.prevent="submitOrder">
-            <div class="row">
-                <div class="col-6 mb-3">
-                <label for="clientName" class="form-label">Nombre</label>
-                <div class="position-relative">
-            <input type="text"
-           class="form-control"
-           id="clientName"
-           v-model="clientData.name"
-           @input="fetchClientSuggestions(clientData.name)"
-           autocomplete="off"
-           required>
-    
-    <!-- Lista de sugerencias -->
-    <ul v-if="showSuggestions && clientSuggestions.length" class="list-group position-absolute w-100 zindex-dropdown">
-  <li class="list-group-item list-group-item-action"
-      v-for="(client, index) in clientSuggestions"
-      :key="index"
-      @click="selectClientSuggestion(client)">
-      [[ client.name ]] ([[ client.phone ]])
-  </li>
-</ul>
-</div>
+            
+            <div class="row position-relative">
+    <div class="col-6 mb-3">
+        <label for="clientName" class="form-label">Nombre</label>
+        <input
+            type="text"
+            class="form-control"
+            id="clientName"
+            v-model="clientData.name"
+             @focus="activeInput = 'name'"
+            @input="fetchClientSuggestions(clientData.name)"
+            autocomplete="off"
+            required
+        >
+    </div>
+    <div class="col-6 mb-3">
+        <label for="clientPhone" class="form-label">Teléfono</label>
+        <input
+            type="text"
+            class="form-control"
+            id="clientPhone"
+            v-model="clientData.phone"
+            @focus="activeInput = 'phone'"
+            @input="fetchClientSuggestions(clientData.phone)"
+            @change="checkClient"
+            autocomplete="off"
+            required
+        >
+    </div>
 
-            </div>
-            <div class="col-6 mb-3">
-                <label for="clientPhone" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="clientPhone" v-model="clientData.phone" @change="checkClient" required>
-            </div>
-            </div>
+    
+</div>
+<ul v-if="showSuggestions && clientSuggestions.length"
+    class="list-group zindex-dropdown"
+    :style="dropdownStyle">
+    <li class="list-group-item list-group-item-action"
+        v-for="(client, index) in clientSuggestions"
+        :key="index"
+        @click="selectClientSuggestion(client)">
+        [[ client.name ]] ([[ client.phone ]])
+    </li>
+</ul>
             
             <div class="mb-3" v-if="existingClient">
                 <div class="alert alert-info">
@@ -141,7 +154,7 @@
             </div>
             <!-- Termina fecha,  plazo y responsablle-->
             <div class="text-center mt-3    ">
-                 <button type="submit" class="btn btn-success">Vista Previa</button>
+                 <button type="submit" class="btn btn-success">Terminar Pedido</button>
             </div>
 
             
@@ -156,11 +169,14 @@
   }
 }
 .zindex-dropdown {
-    z-index: 1050;
     cursor: pointer;
     max-height: 200px;
     overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ced4da;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
 .position-relative {
     position: relative !important;
 }
@@ -181,6 +197,8 @@
         setup() {
             const clientSuggestions = ref([])
             const showSuggestions = ref(false)
+            const activeInput = ref(null)
+            const dropdownStyle = ref({})
             const today = new Date().toISOString().split('T')[0] // Formato YYYY-MM-DD
             const clients = ref([])
             const employees = ref([])
@@ -220,6 +238,21 @@
                 }
             }
 
+            const updateDropdownPosition = () => {
+    const inputId = activeInput.value === 'name' ? 'clientName' : 'clientPhone'
+    const input = document.getElementById(inputId)
+    if (input) {
+        const rect = input.getBoundingClientRect()
+        dropdownStyle.value = {
+            position: 'absolute',
+            top: `${rect.bottom + window.scrollY}px`,
+            left: `${rect.left + window.scrollX}px`,
+            width: `${rect.width}px`,
+            zIndex: 1050,
+        }
+    }
+} 
+
             const fetchClientSuggestions = async (term) => {
             if (!term || term.length < 2) {
                 clientSuggestions.value = []
@@ -234,20 +267,22 @@
             })
             clientSuggestions.value = response.data
             showSuggestions.value = true
+             updateDropdownPosition()
             } catch (error) {
              console.error('Error fetching suggestions:', error)
             }
         }
+
         const selectClientSuggestion = (client) => {
-    clientData.value.name = client.name
-    clientData.value.phone = client.phone
-    order.value.client = client.id
-    existingClient.value = client
-    showSuggestions.value = false
+            clientData.value.name = client.name
+            clientData.value.phone = client.phone
+            order.value.client = client.id
+            existingClient.value = client
+            showSuggestions.value = false
 
-}
+        }
 
-            
+           
             const checkClient = async () => {
                 if (!clientData.value.phone) return
                 
@@ -361,6 +396,10 @@
                 submitOrder,
                 fetchClientSuggestions,
                 selectClientSuggestion,
+                activeInput,
+                dropdownStyle,
+                updateDropdownPosition
+                
             }
         }
     }).mount('#app')
