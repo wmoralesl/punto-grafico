@@ -1,6 +1,8 @@
 {% extends "private/base.html" %}
+{% load static %}
 {% block head %}
 <meta name="csrf-token" content="{{ csrf_token }}">
+<link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 {% endblock %}
 {% block content %}
 <div class="container">
@@ -11,7 +13,26 @@
             <div class="row">
                 <div class="col-6 mb-3">
                 <label for="clientName" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="clientName" v-model="clientData.name" required>
+                <div class="position-relative">
+            <input type="text"
+           class="form-control"
+           id="clientName"
+           v-model="clientData.name"
+           @input="fetchClientSuggestions(clientData.name)"
+           autocomplete="off"
+           required>
+    
+    <!-- Lista de sugerencias -->
+    <ul v-if="showSuggestions && clientSuggestions.length" class="list-group position-absolute w-100 zindex-dropdown">
+  <li class="list-group-item list-group-item-action"
+      v-for="(client, index) in clientSuggestions"
+      :key="index"
+      @click="selectClientSuggestion(client)">
+      [[ client.name ]] ([[ client.phone ]])
+  </li>
+</ul>
+</div>
+
             </div>
             <div class="col-6 mb-3">
                 <label for="clientPhone" class="form-label">Teléfono</label>
@@ -134,6 +155,15 @@
     border: none !important;
   }
 }
+.zindex-dropdown {
+    z-index: 1050;
+    cursor: pointer;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.position-relative {
+    position: relative !important;
+}
 </style>
 {% endblock %}
 
@@ -149,6 +179,8 @@
     createApp({
         delimiters: ['[[', ']]'],
         setup() {
+            const clientSuggestions = ref([])
+            const showSuggestions = ref(false)
             const today = new Date().toISOString().split('T')[0] // Formato YYYY-MM-DD
             const clients = ref([])
             const employees = ref([])
@@ -187,6 +219,34 @@
                     console.error('Error fetching employees:', error)
                 }
             }
+
+            const fetchClientSuggestions = async (term) => {
+            if (!term || term.length < 2) {
+                clientSuggestions.value = []
+                showSuggestions.value = false
+                return
+            }
+
+            try {
+                const response = await axios.get('http://localhost:8000/admin/o/client-suggestions/', {
+                params: { term },
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            clientSuggestions.value = response.data
+            showSuggestions.value = true
+            } catch (error) {
+             console.error('Error fetching suggestions:', error)
+            }
+        }
+        const selectClientSuggestion = (client) => {
+    clientData.value.name = client.name
+    clientData.value.phone = client.phone
+    order.value.client = client.id
+    existingClient.value = client
+    showSuggestions.value = false
+
+}
+
             
             const checkClient = async () => {
                 if (!clientData.value.phone) return
@@ -232,6 +292,8 @@
                     quantity: 1,
                     unit_price: 0
                 })
+                    console.log('Sugerencias:', clientSuggestions.value)
+
             }
             
             const removeLine = (index) => {
@@ -288,13 +350,17 @@
                 employees,
                 clientData,
                 existingClient,
+                clientSuggestions,
+                showSuggestions,
                 order,
                 checkClient,
                 addLine,
                 removeLine,
                 calculateSubtotal,
                 calculateTotal,
-                submitOrder
+                submitOrder,
+                fetchClientSuggestions,
+                selectClientSuggestion,
             }
         }
     }).mount('#app')
