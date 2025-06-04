@@ -5,7 +5,7 @@
 
 {% for employee in employees %}
 
-<p>{{employee.name}} {{employee.get_ubication_display  }}</p>
+<p>{{employee.name}} {{employee.get_ubication_display  }} {{employee.get_position_display  }} {{employee.is_working  }}</p>
 
 
 {% endfor %}
