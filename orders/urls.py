@@ -15,6 +15,7 @@ urlpatterns = [
     path('', OrderListView.as_view(), name='list'),
     path('create/', OrderCreateView.as_view(), name='create'),
     path('detail/<int:pk>/', OrderDetailView.as_view(), name='detail'),
+    path('update/<int:pk>/', OrderUpdateView.as_view(), name='update'),
     path('client-suggestions/', ClientSuggestionsView.as_view(), name='client-suggestions'),
 
 

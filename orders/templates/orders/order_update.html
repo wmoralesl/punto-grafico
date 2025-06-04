@@ -1,0 +1,12 @@
+{% extends 'private/base.html' %}
+
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <h1>Update Order</h1>
+    {{ form.as_p }}
+    <a href="{% url 'orders:detail' object.id %}">Regresar</a>
+    <button type="submit" class="btn btn-primary">Update Order</button>
+</form>
+{% endblock %}
