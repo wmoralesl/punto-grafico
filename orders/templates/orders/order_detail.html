@@ -44,28 +44,32 @@
                             <th class="text-start">Descripción</th>
                             <th>Precio Unitario</th>
                             <th>Subtotal</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="line in order.lines" :key="line.id">
-                            <td class="text-start">[[ line.quantity ]]</td>
-                            <td class="text-start">[[ line.description ]]</td>
-                            <td>Q [[ line.unit_price ]]</td>
-                            <td>Q [[ (line.quantity * line.unit_price).toFixed(2) ]]</td>
+                        {% for line in order.lines.all %}
+                        <tr>
+                            <td class="text-start">{{line.quantity}}</td>
+                            <td class="text-start">{{line.description}}</td>
+                            <td>{{line.unit_price}}</td>
+                            <td>{{line.subtotal}}</td>
+                            <td><a href="{% url 'orders:update-line' line.id %}">e</a></td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                     <tfoot class="fw-bold">
                         <tr class="table-light">
                             <td colspan="3" class="text-end">Total</td>
-                            <td>Q [[ order.total ]]</td>
+                            <td>Q {{ order.get_total}}</td>
                         </tr>
                         <tr>
                             <td colspan="3" class="text-end">Anticipo</td>
-                            <td>Q [[ order.anticipo ]]</td>
+                            <td>Q {{ order.anticipo }}</td>
                         </tr>
                         <tr class="table-warning">
                             <td colspan="3" class="text-end">Saldo Pendiente</td>
-                            <td>Q [[ (order.total - order.anticipo).toFixed(2) ]]</td>
+                            <td>Q {{ order.saldo }}</td>
                         </tr>
                     </tfoot>
                 </table>

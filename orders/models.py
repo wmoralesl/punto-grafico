@@ -16,6 +16,16 @@ class Order(models.Model):
     responsible = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, blank=True)
     def __str__(self):
         return f"Order #{self.id} - {self.client.name}"
+    
+    def saldo(self):
+        return self.get_total() - self.anticipo
+    
+    def get_total(self):
+        return sum([line.subtotal() for line in self.lines.all()])
+    
+    def update_total(self):
+        self.total = self.get_total()
+        self.save(update_fields=['total'])
 
 
 class OrderLine(models.Model):

@@ -13,7 +13,12 @@ OrderLineFormSet = inlineformset_factory(Order, OrderLine, fields=('description'
 
 
 
-class UpdateOrderForm(forms.ModelForm):
+class OrderUpdateForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['client', 'request_date', 'deadline', 'anticipo', 'total', 'responsible']
+        fields = ['client', 'request_date', 'deadline', 'anticipo', 'responsible']
+
+class OrderLineUpdateForm(forms.ModelForm):
+    class Meta:
+        model = OrderLine
+        fields = ['description', 'quantity', 'unit_price']

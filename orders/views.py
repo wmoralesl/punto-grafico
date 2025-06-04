@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from .forms import OrderForm, OrderLineFormSet, UpdateOrderForm
+from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineUpdateForm
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView
 
@@ -27,7 +27,7 @@ class OrderCreateView(TemplateView):
 class OrderUpdateView(UpdateView):
     model = Order
     template_name = 'orders/order_update.html'
-    form_class = UpdateOrderForm
+    form_class = OrderUpdateForm
 
     def get_success_url(self):
         return reverse('orders:detail', kwargs={'pk': self.object.pk})
@@ -75,3 +75,14 @@ class ClientSuggestionsView(LoginRequiredMixin, View):
             results = [{'id': cliente.id, 'name': cliente.name, 'phone': cliente.phone} for cliente in clientes]
             return JsonResponse(results, safe=False)
         return JsonResponse([], safe=False)
+    
+    # Actualizar linea
+
+class OrderLineUpdateView(UpdateView):
+    model = OrderLine
+    template_name = 'lines/orderline_update.html'
+    form_class = OrderLineUpdateForm
+
+
+    def get_success_url(self):
+        return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
