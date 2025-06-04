@@ -7,28 +7,16 @@
         ← Regresar
     </a>
 
-    <div id="app">
-        
-        <!-- Cargando -->
-        <div v-if="loading" class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
-        </div>
-
-        <!-- Contenido principal -->
-        <div v-else>
-
             <!-- Encabezado del Pedido -->
             <div class="c mb-4">
-                <h2 class="text-center">Pedido # [[ order.id ]]</h2>
+                <h2 class="text-center">Pedido #  {{order.id}}</h2>
                 <div class="card p-2">
                     <div class="row text-center">
                         <div class="col mt-2">
-                            <p><strong>Cliente:</strong> [[ order.client_info.name ]]</p>
+                            <p><strong>Cliente:</strong> {{ order.client.name }}</p>
                         </div>
                         <div class="col mt-2">
-                            <p><strong>Teléfono:</strong> [[ order.client_info.phone ]]</p>
+                            <p><strong>Teléfono:</strong> {{order.client.phone}} </p>
                         </div>
                     </div>
                 </div>
@@ -54,7 +42,7 @@
                             <td class="text-start">{{line.description}}</td>
                             <td>{{line.unit_price}}</td>
                             <td>{{line.subtotal}}</td>
-                            <td><a href="{% url 'orders:update-line' line.id %}">e</a></td>
+                            <td><a href="{% url 'orders:update-line' line.id %}">Editar</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -62,14 +50,17 @@
                         <tr class="table-light">
                             <td colspan="3" class="text-end">Total</td>
                             <td>Q {{ order.get_total}}</td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td colspan="3" class="text-end">Anticipo</td>
                             <td>Q {{ order.anticipo }}</td>
+                            <td></td>
                         </tr>
                         <tr class="table-warning">
                             <td colspan="3" class="text-end">Saldo Pendiente</td>
                             <td>Q {{ order.saldo }}</td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -80,19 +71,19 @@
                 <div class="col-md-4 mb-2">
                     <div class="card p-2">
                         <strong>Fecha Solicitada</strong>
-                        <p class="mb-0">[[ order.request_date ]]</p>
+                        <p class="mb-0">{{order.request_date}} </p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-2">
                     <div class="card p-2">
                         <strong>Fecha Entrega</strong>
-                        <p class="mb-0">[[ order.deadline ]]</p>
+                        <p class="mb-0">{{order.deadline}}</p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-2">
                     <div class="card p-2">
                         <strong>Encargado</strong>
-                        <p class="mb-0">[[ order.responsible_info.name ]]</p>
+                        <p class="mb-0">{{order.responsible.name}}</p>
                     </div>
                 </div>
             </div>
@@ -105,42 +96,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-    const { createApp, ref, onMounted } = Vue;
-
-    createApp({
-        delimiters: ['[[', ']]'],
-        setup() {
-            const order = ref({});
-            const loading = ref(true);
-
-            const fetchOrder = async () => {
-                try {
-                    const orderId = window.location.pathname.split('/').pop();
-                    const response = await axios.get(`http://localhost:8000/admin/o/api/orders/{{object.id}}/`);
-                    order.value = response.data;
-                } catch (error) {
-                    console.error('Error fetching order:', error);
-                } finally {
-                    loading.value = false;
-                }
-            };
-
-            onMounted(() => {
-                fetchOrder();
-            });
-
-            return {
-                order,
-                loading
-            };
-        }
-    }).mount('#app');
-</script>
 {% endblock %}
