@@ -1,0 +1,16 @@
+{% extends "private/base.html" %}
+
+{% block content %}
+
+<h1>Eliminando linea de pedido</h1>
+<p>Esta seguro que desea eliminar</p>
+<p>{{ orderline.quantity }} {{ orderline.description }}  a {{ orderline.unit_price }} c/u</p>
+<p>Subtotal: {{orderline.subtotal}}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <a class="btn btn-outline-secondary" href="{% url 'orders:detail' orderline.order.id %}">Cancelar</a>
+    <button class="btn btn-danger" type="submit">Aceptar</button>
+</form>
+
+{% endblock %}

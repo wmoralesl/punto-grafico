@@ -6,7 +6,8 @@
     {% csrf_token %}
      {{ form.as_p }}
     
-     <button type="submit" class="btn btn-primary">Actualizar Línea</button>
+     <a class="btn btn-outline-secondary" href="{% url 'orders:detail' orderline.order.id %}">Cancelar</a>
+     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 
 {% endblock %}

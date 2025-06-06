@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineUpdateForm
 from django_filters.rest_framework import DjangoFilterBackend
-from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView
+from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView, DeleteView
 
 from django.http import JsonResponse
 from django.db.models import Q
@@ -76,7 +76,7 @@ class ClientSuggestionsView(LoginRequiredMixin, View):
             return JsonResponse(results, safe=False)
         return JsonResponse([], safe=False)
     
-    # Actualizar linea
+# ************************************************ Lineas ***********************************************************
 
 class OrderLineUpdateView(UpdateView):
     model = OrderLine
@@ -86,3 +86,13 @@ class OrderLineUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
+
+class OrderLineDeleteView(DeleteView):
+    model = OrderLine
+    template_name = 'lines/orderline_delete.html'
+    context_object_name = 'orderline'
+
+    def get_success_url(self):
+        return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
+
+    

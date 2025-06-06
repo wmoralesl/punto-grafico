@@ -42,7 +42,10 @@
                             <td class="text-start">{{line.description}}</td>
                             <td>{{line.unit_price}}</td>
                             <td>{{line.subtotal}}</td>
-                            <td><a href="{% url 'orders:update-line' line.id %}">Editar</a></td>
+                            <td>
+                                <a href="{% url 'orders:update-line' line.id %}">Editar</a>
+                                <a href="{% url 'orders:delete-line' line.id %}">Eliminar</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
