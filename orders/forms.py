@@ -22,3 +22,8 @@ class OrderLineUpdateForm(forms.ModelForm):
     class Meta:
         model = OrderLine
         fields = ['description', 'quantity', 'unit_price']
+
+class OrderLineCreateForm(forms.ModelForm):
+    class Meta:
+        model = OrderLine
+        fields = ['order', 'description', 'quantity', 'unit_price']

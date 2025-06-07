@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineUpdateForm
+from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineUpdateForm, OrderLineCreateForm
 from django_filters.rest_framework import DjangoFilterBackend
-from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView, DeleteView
+from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView, DeleteView, CreateView
 
 from django.http import JsonResponse
 from django.db.models import Q
@@ -94,5 +94,10 @@ class OrderLineDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
+    
+class OrderLineCreateView(CreateView):
+    model = OrderLine
+    template_name = 'lines/orderline_create.html'
+    form_class = OrderLineCreateForm
 
     
