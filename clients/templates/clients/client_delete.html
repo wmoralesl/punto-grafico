@@ -1,0 +1,29 @@
+{% extends 'private/base.html' %}
+{% block content %}
+<h1 class="mb-4 text-center">Eliminar Cliente</h1>
+<div class="container-fluid py-4">
+    <div class="card position-relative">
+        <div class="card-body">
+            <h5 class="card-title mb-2">
+                ¿Estás seguro de que deseas eliminar al cliente <strong>{{ client.name }}</strong>?
+            </h5> 
+            <p class="card-text mb-1">ID: {{ client.id }}</p>
+            <p class="card-text mb-4">
+                <i class="bi bi-whatsapp"></i> {{ client.phone }}
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <a href="{% url 'clients:client_detail' client.id %}" class="btn btn-secondary">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-danger">
+                    Aceptar 
+                </button>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

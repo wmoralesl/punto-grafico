@@ -11,11 +11,13 @@ class DesignListView(ListView):
     model = Design
     template_name = 'products/design/private/design_list.html'
     context_object_name = 'playeras'
+    paginate_by = 10
 
 class DesignDetailView(DetailView):
     model = Design
     template_name = 'products/design/public/design_detail.html'
     context_object_name = 'playera'
+
 
     def get_object(self):
         """ Obtiene el diseño por el campo 'public' en lugar de 'pk'. """

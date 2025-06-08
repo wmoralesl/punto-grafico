@@ -1,0 +1,43 @@
+{% extends 'private/base.html' %}
+{% load static %}
+{% block content %}
+
+<h1 class="mb-4 text-center">Detalles del Cliente</h1>
+<div class="container-fluid py-4">
+    <div class="card position-relative">
+        <div class="card-body">
+            <!-- Dropdown en la esquina superior derecha -->
+            <div class="dropdown position-absolute top-0 end-0 m-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i> 
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'clients:client_update' client.id %}">
+                            <i class="bi bi-pencil"></i> Editar Cliente
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{% url 'clients:client_delete' client.id %}">
+                            <i class="bi bi-trash"></i> Eliminar Cliente
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contenido con imagen y datos -->
+            <div class="d-flex align-items-start">
+                <img src="{% static 'img/untils/nophoto.jpg' %}" width="100px" alt="userPhoto" class="me-4">
+                <div>
+                    <h5 class="card-title mb-2">{{ client.name }}</h5>
+                    <p class="card-text mb-1">C-{{ client.id }}</p>
+                    <p class="card-text mb-0">
+                         <i class="bi bi-whatsapp" ></i> {{ client.phone }}
+                        </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

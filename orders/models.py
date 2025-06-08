@@ -6,7 +6,7 @@ from employee.models import Employee
 # Create your models here.
 
 class Order(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     request_date = models.DateField()
     deadline = models.DateField()
