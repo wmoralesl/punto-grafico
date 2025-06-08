@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
-from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineUpdateForm, OrderLineCreateForm
+from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineForm
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView, DeleteView, CreateView
 
@@ -81,7 +81,7 @@ class ClientSuggestionsView(LoginRequiredMixin, View):
 class OrderLineUpdateView(UpdateView):
     model = OrderLine
     template_name = 'lines/orderline_update.html'
-    form_class = OrderLineUpdateForm
+    form_class = OrderLineForm
 
 
     def get_success_url(self):
@@ -98,6 +98,18 @@ class OrderLineDeleteView(DeleteView):
 class OrderLineCreateView(CreateView):
     model = OrderLine
     template_name = 'lines/orderline_create.html'
-    form_class = OrderLineCreateForm
+    form_class = OrderLineForm
 
+    def form_valid(self, form):
+        # Obtener el pedido al que se asociará esta línea
+        order = get_object_or_404(Order, pk=self.kwargs['pk'])
+        form.instance.order = order
+        return super().form_valid(form)
     
+    def get_success_url(self):
+        return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = get_object_or_404(Order, pk=self.kwargs['pk'])
+        return context

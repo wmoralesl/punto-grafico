@@ -19,6 +19,8 @@ urlpatterns = [
 
     path('update/line/<int:pk>/', OrderLineUpdateView.as_view(), name='update-line'),
     path('delete/line/<int:pk>/', OrderLineDeleteView.as_view(), name='delete-line'),
+    path('create/line/<int:pk>/', OrderLineCreateView.as_view(), name='create-line'),
+    
     path('client-suggestions/', ClientSuggestionsView.as_view(), name='client-suggestions'),
 
 

@@ -18,12 +18,20 @@ class OrderUpdateForm(forms.ModelForm):
         model = Order
         fields = ['client', 'request_date', 'deadline', 'anticipo', 'responsible']
 
-class OrderLineUpdateForm(forms.ModelForm):
+class OrderLineForm(forms.ModelForm):
     class Meta:
         model = OrderLine
-        fields = ['description', 'quantity', 'unit_price']
+        fields = [ 'quantity', 'description', 'unit_price']
+        widgets = {
+            'description' : forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'quantity' : forms.NumberInput(attrs={'class': 'form-control'}),
+            'unit_price' : forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'description': 'Descripción',
+            'quantity': 'Cantidad',
+            'unit_price': 'Precio Unitario',
+        }
 
-class OrderLineCreateForm(forms.ModelForm):
-    class Meta:
-        model = OrderLine
-        fields = ['order', 'description', 'quantity', 'unit_price']
+
+        

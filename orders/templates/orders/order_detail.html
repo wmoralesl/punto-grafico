@@ -48,6 +48,10 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        <tr>
+                            <td colspan="5" class="text-end">
+                                <a href="{% url 'orders:create-line' order.id %}" class="btn btn-primary">Agregar Línea</a>
+                            </td>
                     </tbody>
                     <tfoot class="fw-bold">
                         <tr class="table-light">
