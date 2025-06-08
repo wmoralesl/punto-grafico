@@ -3,7 +3,7 @@ from django.urls import reverse_lazy, reverse
 from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineForm
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView, DeleteView, CreateView
-
+from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -30,6 +30,7 @@ class OrderUpdateView(UpdateView):
     form_class = OrderUpdateForm
 
     def get_success_url(self):
+        messages.success(self.request, 'Pedido actualizado exitosamente.')
         return reverse('orders:detail', kwargs={'pk': self.object.pk})
 
 
@@ -85,6 +86,7 @@ class OrderLineUpdateView(UpdateView):
 
 
     def get_success_url(self):
+        messages.success(self.request, 'Línea de pedido actualizada exitosamente.')
         return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
 
 class OrderLineDeleteView(DeleteView):
@@ -93,6 +95,7 @@ class OrderLineDeleteView(DeleteView):
     context_object_name = 'orderline'
 
     def get_success_url(self):
+        messages.success(self.request, 'Línea de pedido eliminada exitosamente.')
         return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
     
 class OrderLineCreateView(CreateView):
@@ -107,6 +110,7 @@ class OrderLineCreateView(CreateView):
         return super().form_valid(form)
     
     def get_success_url(self):
+        messages.success(self.request, 'Línea de pedido creada exitosamente.')
         return reverse('orders:detail', kwargs={'pk': self.object.order.pk})
     
     def get_context_data(self, **kwargs):

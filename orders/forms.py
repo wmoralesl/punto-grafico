@@ -23,7 +23,7 @@ class OrderLineForm(forms.ModelForm):
         model = OrderLine
         fields = [ 'quantity', 'description', 'unit_price']
         widgets = {
-            'description' : forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'description' : forms.TextInput(attrs={'class': 'form-control', 'rows': 2}),
             'quantity' : forms.NumberInput(attrs={'class': 'form-control'}),
             'unit_price' : forms.NumberInput(attrs={'class': 'form-control'}),
         }

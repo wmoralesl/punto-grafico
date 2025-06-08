@@ -43,14 +43,18 @@
                             <td>{{line.unit_price}}</td>
                             <td>{{line.subtotal}}</td>
                             <td>
-                                <a href="{% url 'orders:update-line' line.id %}">Editar</a>
-                                <a href="{% url 'orders:delete-line' line.id %}">Eliminar</a>
+                                <a class="btn btn-sm btn-success" href="{% url 'orders:update-line' line.id %}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a class="btn btn-sm btn-danger" href="{% url 'orders:delete-line' line.id %}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
                         <tr>
                             <td colspan="5" class="text-end">
-                                <a href="{% url 'orders:create-line' order.id %}" class="btn btn-primary">Agregar Línea</a>
+                                <a href="{% url 'orders:create-line' order.id %}" class="btn btn-sm btn-primary"> <i class="bi bi-plus" ></i>  Agregar Línea</a>
                             </td>
                     </tbody>
                     <tfoot class="fw-bold">

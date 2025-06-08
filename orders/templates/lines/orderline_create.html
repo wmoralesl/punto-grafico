@@ -1,13 +1,26 @@
 {% extends "private/base.html" %}
 
 {% block content %}
-<h3 class="text-center mb-3">Agregando Linea al pedido #{{order.id}}</h1>
+<h3 class="text-center mb-3">Agregando Línea al pedido #{{order.id}}</h1>
 <form action="" method="POST">
     {% csrf_token %}
-     {{ form.as_p }}
-    
+
+    <div class="row mb-3">
+        <div class="col-md-2">
+            <label for="{{form.quantity.id_for_label}}" class="form-label">Cantidad</label>
+        {{form.quantity}}
+        </div>
+        <div class="col-md-7">
+            <label for="{{form.description.id_for_label}}" class="form-label">Descripción</label>
+        {{form.description}}
+        </div>
+        <div class="col-md-3">
+            <label for="{{form.unit_price.id_for_label}}" class="form-label">Precio Unitario</label>
+        {{form.unit_price}}
+        </div>
+    </div>
     <a class="btn btn-outline-secondary" href="{% url 'orders:detail' order.id %}">Cancelar</a>
-     <button type="submit" class="btn btn-primary">Actualizar</button>
+     <button type="submit" class="btn btn-primary">Agregar</button>
 </form>
 
 {% endblock %}
