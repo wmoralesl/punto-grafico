@@ -7,8 +7,9 @@
         <i class="bi bi-plus-circle"></i>
         Nuevo Pedido</a>
 
+        {% include 'private/frames/pagination.html' %}
     <div id="app">
-        <div v-if="load">
+        
             <table class="table">
                 <thead>
                     <tr>
@@ -27,13 +28,15 @@
                         <td>{{ order.request_date }}</td>
                         <td>Q{{ order.total }}</td>
                         <td>
-                            <a href="{% url 'orders:detail' order.id %}" class="btn btn-sm btn-info">Ver</a>
+                            <a href="{% url 'orders:detail' order.id %}" class="btn btn-sm btn-info"> 
+                            <i class="bi bi-eye"></i>    
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
+        
     </div>
 </div>
 {% endblock %}
