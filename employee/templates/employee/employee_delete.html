@@ -1,0 +1,18 @@
+{% extends 'private/base.html' %}
+
+{% block content %}
+<h1 class="mb-4 text-center">Eliminar Empleado</h1>
+<form method="POST">
+    {% csrf_token %}
+    <div class="alert alert-danger" role="alert">
+        <strong>¡Atención!</strong> ¿Estás seguro de que deseas eliminar al Empleado {{ employee.name }}?
+    </div>
+    
+    <p class="text-muted">Esta acción no se puede deshacer.</p>
+    
+    <a class="btn btn-outline-secondary " href="{% url 'employee:employee_detail' employee.id %}">Cancelar</a>
+    <button class="btn btn-danger " type="submit">Eliminar</button>
+    
+</form>
+
+{% endblock %}

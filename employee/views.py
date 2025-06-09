@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Employee
-from django.views.generic import ListView, UpdateView, DetailView, CreateView
+from django.views.generic import ListView, UpdateView, DetailView, CreateView, DeleteView
 from .forms import EmployeeForm
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
@@ -28,8 +28,8 @@ class EmployeeUpdateView(UpdateView):
     form_class = EmployeeForm
 
     def get_success_url(self):
-        messages.success(self.request, "Cliente actualizado exitosamente.", extra_tags='success')
-        return reverse('clients:client_detail', kwargs={'pk': self.object.pk})
+        messages.success(self.request, "Empleado actualizado exitosamente.", extra_tags='success')
+        return reverse('employee:employee_detail', kwargs={'pk': self.object.pk})
 
 class EmployeeCreateView(CreateView):
     model = Employee
@@ -37,5 +37,14 @@ class EmployeeCreateView(CreateView):
     form_class = EmployeeForm
 
     def get_success_url(self):
-        messages.success(self.request, "Cliente creado exitosamente.", extra_tags='success')
-        return reverse('clients:client_detail', kwargs={'pk': self.object.pk})
+        messages.success(self.request, "Empleado creado exitosamente.", extra_tags='success')
+        return reverse('employee:employee_detail', kwargs={'pk': self.object.pk})
+    
+class EmployeeDeleteView(DeleteView):
+    model = Employee
+    template_name = 'employee/employee_delete.html'
+    context_object_name = 'employee'
+
+    def get_success_url(self):
+        messages.success(self.request, "Empleado eliminado exitosamente.", extra_tags='success')
+        return reverse_lazy('employee:employee_list')
