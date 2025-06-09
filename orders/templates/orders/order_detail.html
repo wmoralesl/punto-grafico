@@ -27,21 +27,21 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover align-middle text-end shadow-sm">
                     <thead class="table-secondary text-center">
-                        <tr>
-                            <th class="text-start">Cantidad</th>
-                            <th class="text-start">Descripción</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal</th>
-                            <th>Acción</th>
+                        <tr class="text-center">
+                            <th>Cantidad</th>
+                            <th >Descripción</th>
+                            <th >Precio Unitario</th>
+                            <th >Subtotal</th>
+                            <th >Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for line in order.lines.all %}
                         <tr>
-                            <td class="text-start">{{line.quantity}}</td>
+                            <td class="text-center">{{line.quantity}}</td>
                             <td class="text-start">{{line.description}}</td>
-                            <td>{{line.unit_price}}</td>
-                            <td>{{line.subtotal}}</td>
+                            <td>Q {{line.unit_price}}</td>
+                            <td>Q {{line.subtotal}}</td>
                             <td>
                                 <a class="btn btn-sm btn-success" href="{% url 'orders:update-line' line.id %}">
                                     <i class="bi bi-pencil-square"></i>
