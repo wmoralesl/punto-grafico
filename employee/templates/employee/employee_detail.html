@@ -1,0 +1,54 @@
+{% extends 'private/base.html' %}
+{% load static %}
+{% block content %}
+
+<h1 class="mb-4 text-center">Detalles del Colaborador</h1>
+<div class="container-fluid py-4">
+    <div class="card position-relative">
+        <div class="card-body">
+            <!-- Dropdown en la esquina superior derecha -->
+            <div class="dropdown position-absolute top-0 end-0 m-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i> 
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'clients:client_update' employee.id %}">
+                            <i class="bi bi-pencil"></i> Editar Colaborador
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{% url 'clients:client_delete' employee.id %}">
+                            <i class="bi bi-trash"></i> Eliminar Colaborador
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contenido con imagen y datos -->
+            <div class="d-flex align-items-start">
+                <img src="{% static 'img/untils/nophoto.jpg' %}" width="100px" alt="userPhoto" class="me-4">
+                <div>
+                    <h5 class="card-title mb-2 d-inline-block">{{ employee.name }}</h5>
+                    {% if employee.is_working %}
+                        <span class="badge bg-success">Activo</span>
+                    {% else %}
+                        <span class="badge bg-danger">Retirado</span>
+                    {% endif %}
+                    <p class="card-text mb-0">
+                         <i class="bi bi-whatsapp" ></i> {{ employee.phone }}
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-geo-alt"></i> {{ employee.get_ubication_display }}
+                    </p>
+                    <p class="card-text mb-0">
+                        <i class="bi bi-briefcase"></i> {{ employee.get_position_display }}
+                    </p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
