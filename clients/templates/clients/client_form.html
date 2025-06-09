@@ -15,7 +15,11 @@
             {{ form.phone|add_class:"form-control" }}
         </div>
     </div>
+    {% if client.id %}
+        <a class="btn btn-outline-primary" href="{% url 'clients:client_detail' client.id %}">Regresar</a>
+    {% else %}
     <a class="btn btn-outline-primary" href="{% url 'clients:client_list' %}">Regresar</a>
+    {% endif %}
     <button class="btn btn-primary" type="submit">Confirmar</button>
 </form>
 {% endblock %}

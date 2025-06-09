@@ -1,0 +1,16 @@
+{% extends "private/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <h1 class="mb-4 text-center">Formulario Empleado</h1>
+    {{form.as_p}}
+    {% if employee.id %}
+        <a class="btn btn-outline-primary" href="{% url 'employee:employee_detail' employee.id %}">Regresar</a>
+    {% else %}
+    <a class="btn btn-outline-primary" href="{% url 'employee:employee_list' %}">Regresar</a>
+    {% endif %}
+    <button class="btn btn-primary" type="submit">Confirmar</button>
+</form>
+{% endblock %}
