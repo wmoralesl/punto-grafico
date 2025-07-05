@@ -6,8 +6,12 @@ from .forms import ConfigurationForm, CustomPasswordChangeForm, MyProfileForm
 from authentication.mixins import ValidatePermissionRequiredMixin
 from django.contrib import messages
 from users.models import User
+from orders.models import Order
+from clients.models import Client
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
+from datetime import date, timedelta
+from django.db.models import Q
 
 from .utils import log_user_action, get_client_ip
 # Create your views here.
@@ -16,12 +20,26 @@ class HomeViewPrivate(LoginRequiredMixin, TemplateView):
     template_name =  'private/main.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        Current_date = date.today()
+        Current_month = Current_date.month
+        Current_year = Current_date.year
+
+        all_orders = Order.objects.count()
+        all_clients = Client.objects.count()
+
+        orders_this_month = Order.objects.filter(Q(request_date__month=Current_month) & Q(request_date__year=Current_year)).count()
+        clients_this_month = Client.objects.filter(Q(created__month=Current_month) & Q(created__year=Current_year)).count()
 
         user = self.request.user
         if user.is_authenticated:
             context['user_permissions'] = user.get_all_permissions()
         else:
             context['user_permissions'] = set()  # Usuario no autenticado
+
+        context['all_orders'] = all_orders
+        context['all_clients'] = all_clients
+        context['orders_this_month'] = orders_this_month
+        context['clients_this_month'] = clients_this_month
         return context
     
 class ConfigurationView(LoginRequiredMixin, TemplateView):
