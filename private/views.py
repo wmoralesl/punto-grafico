@@ -12,12 +12,15 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from datetime import date, timedelta
 from django.db.models import Q
-
+from .graphs import lastTwelveMonths, lastTwelveMonthsName
+import json
 from .utils import log_user_action, get_client_ip
+
 # Create your views here.
 
 class HomeViewPrivate(LoginRequiredMixin, TemplateView):
     template_name =  'private/main.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         Current_date = date.today()
@@ -30,6 +33,15 @@ class HomeViewPrivate(LoginRequiredMixin, TemplateView):
         orders_this_month = Order.objects.filter(Q(request_date__month=Current_month) & Q(request_date__year=Current_year)).count()
         clients_this_month = Client.objects.filter(Q(created__month=Current_month) & Q(created__year=Current_year)).count()
 
+        orders_this_day = Order.objects.filter(Q(request_date=Current_date))
+        delivery_now = Order.objects.filter(deadline=Current_date)  # Pedidos entregados hoy
+        delivery_tomorrow = Order.objects.filter(deadline=Current_date + timedelta(days=1))  # Pedidos a entregar mañana
+        
+        clients_data = lastTwelveMonths(Client, "clientes", Current_date)
+        orders_data = lastTwelveMonths(Order, "orders", Current_date)
+        months_name = lastTwelveMonthsName(Current_date)
+
+
         user = self.request.user
         if user.is_authenticated:
             context['user_permissions'] = user.get_all_permissions()
@@ -40,6 +52,12 @@ class HomeViewPrivate(LoginRequiredMixin, TemplateView):
         context['all_clients'] = all_clients
         context['orders_this_month'] = orders_this_month
         context['clients_this_month'] = clients_this_month
+        context['orders_this_day'] = orders_this_day
+        context['delivery_now'] = delivery_now
+        context['delivery_tomorrow'] = delivery_tomorrow
+        context['clients_data'] = json.dumps(clients_data)
+        context['orders_data'] = json.dumps(orders_data)
+        context['months_name'] = json.dumps(months_name)
         return context
     
 class ConfigurationView(LoginRequiredMixin, TemplateView):
