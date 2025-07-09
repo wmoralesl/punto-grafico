@@ -9,7 +9,7 @@
         <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt odio quis facilis esse repudiandae corporis</p>
         
         <a href="{% url 'public:home' %}">Ver la pagina</a>
-        
+        <canvas class="canvas" id="combinedChart"></canvas>
         {{all_orders}}
         {{all_clients}}
         <div>
@@ -23,5 +23,36 @@
     <div>
         {{user_permissions}}
     </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var clientsData = {{ clients_data|safe }};
+    var ordersData = {{ orders_data|safe }};
+    var monthsName =  {{months_name|safe}}
+    var ctx = document.getElementById('combinedChart').getContext('2d');
+
+var combinedChart = new Chart(ctx, {
+    data: {
+        labels: monthsName, // Asume que ambas series tienen las mismas etiquetas
+        datasets: [
+            {
+                label: 'Pedidos',
+                type: 'bar',
+                data: ordersData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Clientes',
+                data: clientsData,
+                type: 'line', // Especifica el tipo de gráfico para este dataset
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+            }
+        ]
+    },
+});
+</script>
 
 {% endblock %}
