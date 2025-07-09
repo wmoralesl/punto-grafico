@@ -20,6 +20,11 @@ class OrderListView(ListView):
     template_name = 'orders/order_list.html'
     context_object_name = 'orders'
     paginate_by = 10
+    
+    def get_queryset(self):
+        queryset = Order.objects.all().order_by('-created')
+    
+        return queryset
 
 
 class OrderCreateView(TemplateView):
