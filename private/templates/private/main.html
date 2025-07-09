@@ -5,20 +5,77 @@
     <div class="jumbotron text-center">
         <h1 class="display-4">Bienvenido al Dashboard</h1>
         <p class="lead">Hola, <strong>{{ user.username }}</strong>. ¡Explora el panel de control!</p>
-        <hr class="my-4">
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nesciunt odio quis facilis esse repudiandae corporis</p>
         
-        <a href="{% url 'public:home' %}">Ver la pagina</a>
-        <canvas class="canvas" id="combinedChart"></canvas>
-        {{all_orders}}
-        {{all_clients}}
-        <div>
-            {{orders_this_month}}
+        <!-- <a href="{% url 'public:home' %}">Ver la pagina</a> -->
+
+        <div class="row">
+            <div class="card col-3">
+                <div class="card-body">
+                        <h5 class="card-title">Todos los Pedidos</h5>
+                        <p class="card-text">{{ all_orders }}</p>  
+               </div>
+            </div>
+
+            <div class="card col-3">
+                <div class="card-body">
+                        <h5 class="card-title">Todos los Clientes</h5>
+                        <p class="card-text">{{ all_clients }}</p>  
+               </div>
+            </div>
+
+            <div class="card col-3">
+                <div class="card-body">
+                        <h5 class="card-title">Pedidos este mes</h5>
+                        <p class="card-text">{{ orders_this_month }}</p>  
+               </div>
+            </div>
+
+            <div class="card col-3">
+                <div class="card-body">
+                        <h5 class="card-title">Pedidos este mes</h5>
+                        <p class="card-text">{{ clients_this_month }}</p>  
+               </div>
+            </div>
         </div>
-        <div>
-            {{clients_this_month}}
-        
-    </div>
+
+        <div class="row">
+            <div class="card col-6">
+                <canvas class="canvas" id="combinedChart"></canvas>
+            </div>
+            <div class="card col-6">
+                <h3>Pedidos Realizados Hoy {{current_date}}</h3>
+            {% for order in orders_this_day %}
+            <div class="info">
+                <a class="" href="{% url 'orders:detail' order.id %}">{{order.client.name}}</a>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="card col-6">
+                <h3>Se entregan hoy</h3>
+            {% for delivery in delivery_now %}
+            <div class="info">
+                <a class="links {% if delivery.entregado %} green {% else %} red {% endif %};" href="{% url 'orders:detail' delivery.id %}">{{delivery.client.name}} - Q{{delivery.getSaldo}}</a>
+            </div>
+            {% endfor %}
+            <div>
+                <a class="button" href="#">Ir al Calendario</a>
+            </div>
+            </div>
+
+            <div class="card col-6">
+                 <h3>Se entregan Mañana</h3>
+            {% for delivery in delivery_tomorrow %}
+            <div class="info">
+                <a class="links {% if delivery.entregado %} green {% else %} red {% endif %};" href="{% url 'orders:detail' delivery.id %}">{{delivery.client.name}}</a>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+
+    
 
     <div>
         {{user_permissions}}
