@@ -4,6 +4,22 @@ from clients.models import Client
 from employee.models import Employee
 
 # Create your models here.
+class OrderStatus(models.Model):
+    STATUS_CHOICES = [
+        ('recibido', 'Recibido'),
+        ('diseno', 'Diseño'),
+        ('en_proceso', 'En Proceso'),
+        ('completado', 'Completado'),
+        ('cancelado', 'Cancelado'),
+        ('anulado', 'Anulado'),
+    ]
+
+    code = models.CharField(max_length=20, choices=STATUS_CHOICES, unique=True)
+    description = models.TextField()
+    icon = models.CharField(max_length=50, help_text="Clase del ícono de Bootstrap, por ejemplo: 'bi bi-box-seam'")
+
+    def __str__(self):
+        return dict(self.STATUS_CHOICES).get(self.code, self.code).title()
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
@@ -14,6 +30,9 @@ class Order(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateField(auto_now=True)
     responsible = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, blank=True)
+    current_status = models.ForeignKey(OrderStatus, on_delete=models.SET_NULL, null=True)
+
+
     def __str__(self):
         return f"Order #{self.id} - {self.client.name}"
     
