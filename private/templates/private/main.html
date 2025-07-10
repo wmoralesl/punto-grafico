@@ -68,7 +68,7 @@
             <div class="card col-6">
                  <h3>Se entregan Mañana</h3>
             {% for delivery in delivery_tomorrow %}
-            <div class="info">
+            <div class="">
                 <a class="links {% if delivery.entregado %} green {% else %} red {% endif %};" href="{% url 'orders:detail' delivery.id %}">{{delivery.client.name}}</a>
             </div>
             {% endfor %}
