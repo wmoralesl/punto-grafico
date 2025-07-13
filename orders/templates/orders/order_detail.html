@@ -3,13 +3,39 @@
 {% block content %}
 <div class="container-xl py-4">
     
-    <a href="{% url 'orders:list' %}" class="btn btn-secondary mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'orders:list' %}" class="btn btn-secondary">
         ← Regresar
     </a>
 
-            <!-- Encabezado del Pedido -->
-            <div class="c mb-4">
-                <h2 class="text-center">Pedido #  {{order.id}}</h2>
+    <div class="dropdown">
+        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-three-dots-vertical"></i>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Editar</a></li>
+            <li><a class="dropdown-item" href="#">Eliminar</a></li>
+            <li><a class="dropdown-item" href="#">Anular</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="mb-4 text-center">
+    <h2 class="d-inline">Pedido # {{ order.id }}</h2>
+    <span class="badge badge-sm
+        {% if order.current_status.code == 'recibido' %}
+            bg-primary
+        {% elif order.current_status.code == 'completado' %}
+            bg-success
+        {% elif order.current_status.code == 'anulado' %}
+            bg-secondary
+        {% else %}
+            bg-primary
+        {% endif %}">
+        <i class="{{ order.current_status.icon }}"></i> {{ order.current_status.get_code_display }}
+    </span>
+</div>
                 <div class="card p-2">
                     <div class="row text-center">
                         <div class="col mt-2">
@@ -106,7 +132,6 @@
 
         </div>
     </div>
-    <i class="{{order.current_status.icon}}" ></i>
-    <p>{{order.current_status.get_code_display}}</p>
+    
 </div>
 {% endblock %}
