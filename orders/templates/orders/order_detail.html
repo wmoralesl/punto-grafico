@@ -13,7 +13,7 @@
             <i class="bi bi-three-dots-vertical"></i>
         </a>
         <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Editar</a></li>
+            <li><a class="dropdown-item" href="{% url 'orders:update' order.id %}">Editar</a></li>
             <li><a class="dropdown-item" href="#">Eliminar</a></li>
             <li><a class="dropdown-item" href="#">Anular</a></li>
         </ul>
@@ -127,7 +127,6 @@
             
             <div class="text-center mt-2">
                 <a href="#" class="btn btn-primary">Imprimir</a>
-                <a href="{% url 'orders:update' order.id %}">Editar</a>
             </div>
 
         </div>
