@@ -6,12 +6,27 @@ from django.urls import reverse, reverse_lazy
 from private.utils import log_user_action, get_client_ip
 from .forms import DesignForm
 from django.contrib import messages
+from django.db.models import Q
 
 class DesignListView(ListView):
     model = Design
     template_name = 'products/design/private/design_list.html'
     context_object_name = 'playeras'
     paginate_by = 10
+
+    def apply_filters(self, queryset):
+        query = self.request.GET.get("q")
+        if query:
+            filters = (
+                Q(name__icontains=query) |
+                Q(description__icontains=query) |
+                Q(tags__name__icontains=query)
+            )
+            queryset = queryset.filter(filters).distinct()
+        return queryset
+    
+    def get_queryset(self):
+        return self.apply_filters(super().get_queryset())
 
 class DesignDetailView(DetailView):
     model = Design

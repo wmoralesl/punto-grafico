@@ -21,11 +21,19 @@ class OrderListView(ListView):
     context_object_name = 'orders'
     paginate_by = 10
     
-    def get_queryset(self):
-        queryset = Order.objects.all().order_by('-created')
-    
+    def apply_filters(self, queryset):
+        query = self.request.GET.get("q")
+        if query:
+            filters = (
+                Q(client__name__icontains=query) |
+                Q(client__phone__icontains=query) |
+                Q(lines__description__icontains=query)
+            )
+            queryset = queryset.filter(filters).distinct()
         return queryset
-
+    
+    def get_queryset(self):
+        return self.apply_filters(super().get_queryset())
 
 class OrderCreateView(TemplateView):
     template_name = 'orders/order_create.html'
