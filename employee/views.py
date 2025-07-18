@@ -4,7 +4,7 @@ from django.views.generic import ListView, UpdateView, DetailView, CreateView, D
 from .forms import EmployeeForm
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
-
+from django.db.models import Q
 # Create your views here.
 
 class EmployeeListView(ListView):
@@ -13,8 +13,18 @@ class EmployeeListView(ListView):
     context_object_name = 'employees'
     paginate_by = 10
 
+    def apply_filters(self, queryset):
+        query = self.request.GET.get("q")
+        if query:
+            filters = (
+                Q(name__icontains=query) |
+                Q(phone__icontains=query)
+            )
+            queryset = queryset.filter(filters)
+        return queryset
+
     def get_queryset(self):
-        return Employee.objects.all().order_by('id')
+        return self.apply_filters(super().get_queryset())
     
 class EmployeeDetailView(DetailView):
     model = Employee
