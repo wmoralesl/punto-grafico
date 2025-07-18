@@ -67,20 +67,15 @@ Catálogo
                
                     {% for playera in playeras %}
                         <div class="col-6 col-md-4 col-lg-3 mb-3">
-                            <div class="card h-100" onclick="window.location.href='{% url 'products:design_detail' playera.public %}'" style="cursor: pointer;">
+                            <div class="card h-100" onclick="window.open('{% url 'products:design_detail' playera.public %}', '_blank')" style="cursor: pointer;">
+
+                                {% if playera.is_new %}
+                                    <span class="badge bg-success position-absolute top-0 start-0 m-2">Nuevo</span>
+                                {% endif %}
                                 <img src="{{ playera.image.url }}" class="card-img-top" alt="{{ playera.name }}">
                                 
                                 <div class="card-body text-center">
                                     <h5 class="card-title">{{ playera.name }}</h5>
-                                    <p class="card-text">
-                                        {% if playera.on_offer %}
-                                        <span class="text-primary fw-bold fs-4">Q{{ playera.offer_price }}</span>
-                                        <span class="text-decoration-line-through text-muted fs-6">Q{{ playera.sale_price }}</span>
-                                            {% else %}
-                                            <span class="text-primary fw-bold fs-4">Q{{ playera.sale_price }}</span>
-                                        {% endif %}
-
-                                    </p>
                                     <!-- <p class="card-text">
                                         {% for tag in playera.tags.all %}
                                             <span class="badge bg-primary text-light">{{ tag.name }}</span>
