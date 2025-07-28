@@ -7,12 +7,19 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from config import settings
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from .models import Client, Order, OrderLine
 from .serializers import ClientSerializer, OrderSerializer, OrderDetailSerializer, OrderLineSerializer, EmployeeSerializer
 from employee.models import Employee
+import os
+from django.http import HttpResponseRedirect, HttpResponse
+from django.utils.encoding import smart_str
+from .untils import printPDF
+from django.contrib.staticfiles import finders
+from django.template.loader import get_template
+from weasyprint import HTML
 # Create your views here.
 
 class OrderListView(ListView):
@@ -80,6 +87,28 @@ class OrderViewSet(viewsets.ModelViewSet):
         total = sum(line.subtotal() for line in lines)
         order.total = total
         order.save()
+# ********************************************* Imprimir Orden ************************
+
+class OrderPrintView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        
+        orden = Order.objects.get(pk=pk)
+        css_url = finders.find('css/general.css')
+        html_name = 'print/orderprint.html'
+
+        data = {
+            'order': orden,
+
+        }
+        pdf = printPDF(html_name, css_url, data)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        nombre_archivo = "Mipedido.pdf"
+        response['Content-Disposition'] = 'inline; filename*=UTF-8\'\'{}'.format(smart_str(nombre_archivo))
+        
+        # response['Content-Disposition'] = 'attachment; filename="pedido.pdf"'
+        return response
+
+# ******************************************** Client ************************
 
 # Client sugestion
 class ClientSuggestionsView(LoginRequiredMixin, View):

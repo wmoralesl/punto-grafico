@@ -3,6 +3,8 @@ from django.template.loader import get_template
 from weasyprint import HTML, CSS
 from django.template import TemplateDoesNotExist
 
+from weasyprint.text.fonts import FontConfiguration
+from django.conf import settings
 
 def printPDF(template_src, css_url, context_dict=None):
     if context_dict is None:
@@ -16,7 +18,7 @@ def printPDF(template_src, css_url, context_dict=None):
         pdf_file = HTML(string=html_template).write_pdf(stylesheets=[CSS(css_url)])
         
         # Si se genera correctamente, devuelve el PDF como una respuesta HTTP
-        return HttpResponse(pdf_file, content_type='application/pdf')
+        return pdf_file
         
     except TemplateDoesNotExist as e:
         # Maneja el caso en que el template no existe
@@ -27,4 +29,3 @@ def printPDF(template_src, css_url, context_dict=None):
         # Maneja cualquier otro error que pueda ocurrir durante el proceso
         error_message = f"Error: {str(e)}"
         return HttpResponse(error_message, status=500)
-

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido No. {{order.id}}</title>
+</head>
+<body>
+<div>
+    <div class="flex-element"><img class="logo" src="https://lh3.googleusercontent.com/a/ACg8ocKg51Dm7PD4TYVjFbHVJ3YY68xT14oYZ2xmRUz8enN5tuNTcNubH5jHwK3u29olxKvD69gRfs5KAQ8iwS8ayl5_vSZX2xlz=s288-c-no
+            " alt="Logo"></div> 
+            <div>
+                <p class="tbold">PubliPrint</p>
+            <p class="tbold">Bo. El calvario</p>
+            <p class="tbold">San Luis Jilotepeque</p>
+            <p class="tbold">3048-6428</p>
+            </div>
+</div>
+<h1>Pedido No.{{order.id}}</h1>
+<p>Cliente {{order.client.name}}</p>
+<p>Teléfono {{order.client.phone}}</p>
+<p>Detalles del Pedido</p>
+ <table class="table table-striped table-hover align-middle text-end shadow-sm">
+                    <thead class="table-secondary text-center">
+                        <tr class="text-center">
+                            <th>Cantidad</th>
+                            <th >Descripción</th>
+                            <th >Precio Unitario</th>
+                            <th >Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in order.lines.all %}
+                        <tr>
+                            <td class="text-center">{{line.quantity}}</td>
+                            <td class="text-start">{{line.description}}</td>
+                            <td>Q {{line.unit_price}}</td>
+                            <td>Q {{line.subtotal}}</td>
+                            
+                        </tr>
+                        {% endfor %}
+                        <tr>
+
+                        </table>
+                    <div>
+    <p>Total pedido Q {{ order.get_total}}</p>
+    <p>Anticipo Q {{ order.anticipo }}</p>
+    <p>Saldo Q {{ order.saldo }}</p>
+
+    <div>
+        <strong>Fecha Solicitada</strong>
+                        <p class="mb-0">{{order.request_date}} </p>
+    </div>
+
+    <div>
+        <strong>Fecha Entrega</strong>
+                        <p class="mb-0">{{order.deadline}}</p>
+    </div>
+
+    <div>
+        <strong>Encargado</strong>
+                        <p class="mb-0">{{order.responsible.name}}</p>
+    </div>
+</div>
+
+    <p>Mantas vinilicas, Calcomanias, Cuadros en PVC, Figuras Troqueladas, Tazas, Playeras, Pachones, Llaveros, Uniformes deportivos, Uniformes Empresariales, Banners, Tarjetas de presentación, Volantes, Trifoliares y mucho más</p>
+</body>
+</html>
