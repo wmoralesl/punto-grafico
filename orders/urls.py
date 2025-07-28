@@ -24,6 +24,7 @@ urlpatterns = [
     path('client-suggestions/', ClientSuggestionsView.as_view(), name='client-suggestions'),
 
     path('print/<int:pk>/', OrderPrintView.as_view(), name='print'),
+    path('prin/<int:pk>/', OrderPreviewPrint.as_view(), name='preview-print'),
 
 
 ]

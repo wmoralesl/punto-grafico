@@ -92,7 +92,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 class OrderPrintView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         
-        orden = Order.objects.get(pk=pk)
+        orden = get_object_or_404(Order, pk=pk)
         css_url = finders.find('css/general.css')
         html_name = 'print/orderprint.html'
 
@@ -108,6 +108,15 @@ class OrderPrintView(LoginRequiredMixin, View):
         # response['Content-Disposition'] = 'attachment; filename="pedido.pdf"'
         return response
 
+class OrderPreviewPrint(LoginRequiredMixin, DetailView):
+    model = Order
+    template_name = 'print/orderprint.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['css_url'] = finders.find('css/general.css')
+        return context
+    
 # ******************************************** Client ************************
 
 # Client sugestion
