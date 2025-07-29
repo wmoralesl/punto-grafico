@@ -22,14 +22,14 @@
 
 
 <div class="mb-4 text-center">
-    <h2 class="d-inline">Pedido # {{ order.id }}</h2>
+    <h2 class="d-inline position-relative">Pedido # {{ order.id }}</h2>
     <span class="badge badge-sm
         {% if order.current_status.code == 'recibido' %}
-            bg-primary
+            bg-secondary
         {% elif order.current_status.code == 'completado' %}
             bg-success
         {% elif order.current_status.code == 'anulado' %}
-            bg-secondary
+            bg-danger
         {% else %}
             bg-primary
         {% endif %}">
@@ -126,7 +126,9 @@
             </div>
             
             <div class="text-center mt-2">
-                <a href="#" class="btn btn-primary">Imprimir</a>
+                <a href="{% url 'orders:print' order.id %}" class="btn btn-primary" target="_blank">
+                    <i class="bi bi-printer"></i> 
+                    Imprimir</a>
             </div>
 
         </div>
