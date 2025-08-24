@@ -24,7 +24,10 @@ class EmployeeListView(ListView):
         return queryset
 
     def get_queryset(self):
-        return self.apply_filters(super().get_queryset())
+        queryset = super().get_queryset()
+        queryset = self.apply_filters(queryset)
+        # Ordenar por fecha de creación descendente
+        return queryset.order_by('-created')
     
 class EmployeeDetailView(DetailView):
     model = Employee

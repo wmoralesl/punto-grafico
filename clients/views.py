@@ -24,7 +24,9 @@ class ClientListView(LoginRequiredMixin, ListView):
         return queryset
 
     def get_queryset(self):
-        return self.apply_filters(super().get_queryset())
+        queryset = super().get_queryset()
+        queryset = self.apply_filters(queryset)
+        return queryset.order_by('-created')
 
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
