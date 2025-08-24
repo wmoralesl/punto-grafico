@@ -102,6 +102,12 @@
             color: #666;
             text-align: center;
         }
+        .badge{
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #888888;
+        }
         @media print {
             body {
                 padding: 0;
@@ -132,7 +138,12 @@
         </div>
 
         <!-- Título del pedido -->
-        <h1 class="order-title">ORDEN DE PEDIDO NO. {{order.id}}</h1>
+        <h1 class="order-title">ORDEN # {{order.id}}
+
+            <span class="badge">{{ order.current_status.get_code_display }}</span>
+        </h1>
+        
+            
 
         <!-- Información del cliente -->
         <!-- <div class="client-info">

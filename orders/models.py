@@ -46,6 +46,9 @@ class Order(models.Model):
         self.total = self.get_total()
         self.save(update_fields=['total'])
 
+    def get_lines(self):
+        return " • ".join([str(line) for line in self.lines.all()])
+
 
 class OrderLine(models.Model):
     order = models.ForeignKey(Order, related_name='lines', on_delete=models.CASCADE)
@@ -57,5 +60,5 @@ class OrderLine(models.Model):
         return self.quantity * self.unit_price
     
     def __str__(self):
-        return f"{self.description} ({self.quantity})"
+        return f" {self.quantity} {self.description}"
     

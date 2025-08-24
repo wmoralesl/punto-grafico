@@ -1,6 +1,14 @@
 {% extends "private/base.html" %}
 
 {% block content %}
+<style>
+    .description-col {
+    max-width: 250px;   /* ajusta el ancho según lo que quieras */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
 <h1 class="mb-4 text-center">Listado de Pedidos</h1>
 <div class="d-flex justify-content-between align-items-center mb-4">
     {% if request.user.role == 'admin' %}
@@ -36,8 +44,8 @@
                         <tr>
                         <th>#</th>
                         <th>Cliente</th>
-                        <th>Fecha Solicitada</th>
-                        <th>Total</th>
+                        <th>Artículos</th>
+                        <th>Saldo</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -46,8 +54,8 @@
                     <tr>
                         <td>{{ order.id }}</td>
                         <td>{{ order.client.name }}</td>
-                        <td>{{ order.request_date }}</td>
-                        <td>Q{{ order.total }}</td>
+                        <td class="text-truncate description-col">{{ order.get_lines }}</td>
+                        <td>Q{{ order.saldo }}</td>
                         <td>
                             <a href="{% url 'orders:detail' order.id %}" class="btn btn-sm btn-info"> 
                             <i class="bi bi-eye"></i>    
