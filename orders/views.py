@@ -44,6 +44,12 @@ class OrderListView(ListView):
         queryset = self.apply_filters(queryset)
         # Ordenar por fecha de creación descendente
         return queryset.order_by('-created')
+    
+    def get_context_data(self, **kwargs):
+        # Mostrar la cantidad de resultados
+        context = super().get_context_data(**kwargs)
+        context['total_orders'] = self.get_queryset().count()
+        return context 
 
 class OrderCreateView(TemplateView):
     template_name = 'orders/order_create.html'
