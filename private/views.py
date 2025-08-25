@@ -165,3 +165,24 @@ class CustomPasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, Password
         return response
     
 
+class calendarView(LoginRequiredMixin, TemplateView):
+    template_name = 'private/calendar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orders = Order.objects.all()
+
+        # Crear eventos solo para órdenes
+        events = [
+            {
+                'title': order.client.name,
+                'start': order.deadline.strftime('%Y-%m-%d'),
+                'end': order.deadline.strftime('%Y-%m-%d'),
+                'url': reverse('orders:detail', kwargs={'pk': order.id}),
+                'color': 'green' if order.current_status.code == "cancelado" else 'red',
+            }
+            for order in orders
+        ]
+
+        context['events'] = json.dumps(events)
+        return context
