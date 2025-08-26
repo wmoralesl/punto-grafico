@@ -30,6 +30,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
 # Application definition
 
@@ -83,7 +84,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'config.context_processors.organization_context'
+                'config.context_processors.organization_context',
+                'config.context_processors.api_base_url'
             ],
         },
     },

@@ -190,6 +190,7 @@
 <script>
     axios.defaults.headers.common['X-CSRFToken'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
+    const API_BASE_URL = "{{ API_BASE_URL }}";
     const { createApp, ref, onMounted } = Vue
     
     createApp({
@@ -226,7 +227,7 @@
             
             const fetchClients = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8000/admin/o/api/clients/')
+                    const response = await axios.get(`${API_BASE_URL}/admin/o/api/clients/`)
                     clients.value = response.data
                 } catch (error) {
                     console.error('Error fetching clients:', error)
@@ -235,7 +236,7 @@
 
             const fetchEmployees = async () =>{
                 try{
-                    const response = await axios.get('http://localhost:8000/admin/o/api/employees/')
+                    const response = await axios.get(`${API_BASE_URL}/admin/o/api/employees/?position=atencion&is_working=true`)
                     employees.value = response.data
                 } catch (error) {
                     console.error('Error fetching employees:', error)
@@ -268,7 +269,7 @@
         const searchTerm = activeInput.value === 'phone' ? normalizePhone(term) : term
 
             try {
-                const response = await axios.get('http://localhost:8000/admin/o/client-suggestions/', {
+                const response = await axios.get(`${API_BASE_URL}/admin/o/client-suggestions/`, {
                 params: { term: searchTerm },
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             })
@@ -296,7 +297,7 @@
                 
                 try {
                     // Buscar cliente por teléfono
-                    const response = await axios.get(`http://localhost:8000/admin/o/api/clients/?phone=${clientData.value.phone}`)
+                    const response = await axios.get(`${API_BASE_URL}/admin/o/api/clients/?phone=${clientData.value.phone}`)
                     
                     if (response.data.length > 0) {
                         existingClient.value = response.data[0]
@@ -318,7 +319,7 @@
                 if (!clientData.value.name || !clientData.value.phone) return null
                 
                 try {
-                    const response = await axios.post('http://localhost:8000/admin/o/api/clients/', {
+                    const response = await axios.post(`${API_BASE_URL}/admin/o/api/clients/`, {
                         name: clientData.value.name,
                         phone: normalizePhone(clientData.value.phone)
 
@@ -375,7 +376,7 @@
                         lines: order.value.lines
                     }
                     
-                    const response = await axios.post('http://localhost:8000/admin/o/api/orders/', payload)
+                    const response = await axios.post(`${API_BASE_URL}/admin/o/api/orders/`, payload)
                     alert('Pedido creado exitosamente!')
                     window.location.href = `/admin/o/detail/${response.data.id}`
                 } catch (error) {

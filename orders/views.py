@@ -72,8 +72,8 @@ class OrderDetailView(DetailView):
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['name']
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['position', 'is_working']
 
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = Client.objects.all()

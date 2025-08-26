@@ -9,3 +9,7 @@ def organization_context(request):
     return {
         'organization': config
     }
+
+def api_base_url(request):
+    from django.conf import settings
+    return {"API_BASE_URL": settings.API_BASE_URL}
