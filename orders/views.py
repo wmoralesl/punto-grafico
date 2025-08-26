@@ -20,6 +20,8 @@ from .untils import printPDF
 from django.contrib.staticfiles import finders
 from django.template.loader import get_template
 from weasyprint import HTML
+from urllib.parse import quote
+
 # Create your views here.
 
 class OrderListView(ListView):
@@ -112,7 +114,7 @@ class OrderPrintView(LoginRequiredMixin, View):
         pdf = printPDF(html_name, css_url, data)
         response = HttpResponse(pdf, content_type='application/pdf')
         nombre_archivo = "Mipedido.pdf"
-        response['Content-Disposition'] = 'inline; filename*=UTF-8\'\'{}'.format(smart_str(nombre_archivo))
+        response['Content-Disposition'] = f"inline; filename*=UTF-8''{quote(nombre_archivo)}"
         
         # response['Content-Disposition'] = 'attachment; filename="pedido.pdf"'
         return response
