@@ -179,7 +179,8 @@ class calendarView(LoginRequiredMixin, TemplateView):
                 'start': order.deadline.strftime('%Y-%m-%d'),
                 'end': order.deadline.strftime('%Y-%m-%d'),
                 'url': reverse('orders:detail', kwargs={'pk': order.id}),
-                'color': 'green' if order.current_status.code == "cancelado" else 'red',
+                'color': 'green' if (order.current_status and order.current_status.code == "cancelado") else 'red',
+
             }
             for order in orders
         ]
