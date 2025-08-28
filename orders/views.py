@@ -105,7 +105,7 @@ class OrderPrintView(LoginRequiredMixin, View):
         
         orden = get_object_or_404(Order, pk=pk)
         css_url = finders.find('css/general.css')
-        html_name = 'print/orderprint.html'
+        html_name = 'print/orderPrint.html'
 
         data = {
             'order': orden,
@@ -121,7 +121,8 @@ class OrderPrintView(LoginRequiredMixin, View):
 
 class OrderPreviewPrint(LoginRequiredMixin, DetailView):
     model = Order
-    template_name = 'print/orderprint.html'
+    template_name = 'print/orderPrint.html'
+    
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
