@@ -57,9 +57,11 @@
                 <div class="card h-100 p-3">
                 <h3>Pedidos Realizados Hoy {{current_date}}</h3>
             {% for order in orders_this_day %}
-            <div class="info">
-                <a class="" href="{% url 'orders:detail' order.id %}">{{order.client.name}}</a>
-            </div>
+            <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'orders:detail' order.id %}">
+                            <div class="badge bg-secondary mb-1 p-2 w-100 fs-6">
+                                {{order.client.name}} 
+                            </div>
+                        </a>
             {% endfor %}
             </div>
             </div>
@@ -71,12 +73,14 @@
                 <div class="card h-100 p-3">
                     <h3>Se entregan hoy</h3>
                     {% for delivery in delivery_now %}
-                    <div class="info">
-                        <a class="links {% if delivery.entregado %} green {% else %} red {% endif %};" href="{% url 'orders:detail' delivery.id %}">{{delivery.client.name}} - Q{{delivery.getSaldo}}</a>
-                    </div>
+                    <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'orders:detail' delivery.id %}">
+                            <div class="badge bg-{% if delivery.current_status.code == 'cancelado' %}success {% else %}danger{% endif %} mb-1 p-2 w-100 fs-6">
+                                {{delivery.client.name}} Q {{delivery.saldo|floatformat:2}}
+                            </div>
+                        </a>
                     {% endfor %}
                     <div>
-                        <a class="btn btn-primary" href="#">Ir al Calendario</a>
+                        <a class="btn btn-primary" href="{% url 'private:calendar' %}">Ir al Calendario</a>
                     </div>
                 </div>
             </div>
@@ -87,7 +91,7 @@
                     {% for delivery in delivery_tomorrow %}
                     
                         <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'orders:detail' delivery.id %}">
-                            <div class="badge bg-{% if delivery.current_status.code == 'cancelado' %}success {% else %}secondary{% endif %} mb-1 p-2 w-100 fs-6">
+                            <div class="badge bg-{% if delivery.current_status.code == 'cancelado' %}success {% else %}danger{% endif %} mb-1 p-2 w-100 fs-6">
                                 {{delivery.client.name}}
                             </div>
                         </a>
