@@ -17,7 +17,10 @@ class OrderUpdateForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['client', 'request_date', 'deadline', 'anticipo',  'responsible', 'current_status']
-
+        widgets = {
+            'request_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'},format='%Y-%m-%d' ),
+            'deadline': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}, format='%Y-%m-%d' ),
+        }
         labels = {
             'client': 'Cliente',
             'request_date': 'Fecha de Solicitud',

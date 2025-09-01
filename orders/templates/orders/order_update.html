@@ -1,12 +1,49 @@
 {% extends 'private/base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
 
 <form action="" method="POST">
     {% csrf_token %}
-    <h1>Actualizando pedido</h1>
-    {{ form.as_p }}
-    <a href="{% url 'orders:detail' object.id %}">Regresar</a>
-    <button type="submit" class="btn btn-primary">Update Order</button>
+    <h1 class="text-center">Actualizando pedido</h1>
+    <!-- {{ form.as_p }} -->
+    
+    <div class="row mb-3">
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.client.id_for_label }}" class="form-label">Nombre</label>
+            {{form.client|add_class:"form-control"}}
+        </div>
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.anticipo.id_for_label }}" class="form-label">Anticipo</label>
+            {{form.anticipo|add_class:"form-control"}}
+        </div>
+    </div>
+
+     <div class="row mb-3">
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.responsible.id_for_label }}" class="form-label">Responsable</label>
+            {{form.responsible|add_class:"form-control"}}
+        </div>
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.current_status.id_for_label }}" class="form-label">Estado</label>
+            {{form.current_status|add_class:"form-control"}}
+        </div>
+    </div>
+
+     <div class="row mb-3">
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.request_date.id_for_label }}" class="form-label">Fecha Pedido</label>
+            {{form.request_date|add_class:"form-control"}}
+        </div>
+        <div class="col-12 col-md-6 form-group">
+            <label for="{{ form.deadline.id_for_label }}" class="form-label">Fecha Entrega</label>
+            {{form.deadline|add_class:"form-control"}}
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-secondary" href="{% url 'orders:detail' object.id %}">Regresar</a>
+    <button type="submit" class="btn btn-primary">Actualizar Pedido</button>
+    </div>
 </form>
 {% endblock %}
