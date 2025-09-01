@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from config import settings
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
-from .models import Client, Order, OrderLine
+from .models import Client, Order, OrderLine, OrderStatus
 from .serializers import ClientSerializer, OrderSerializer, OrderDetailSerializer, OrderLineSerializer, EmployeeSerializer
 from employee.models import Employee
 import os
@@ -71,6 +71,11 @@ class OrderDetailView(DetailView):
     model = Order
     context_object_name = 'order'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['statuses'] = OrderStatus.objects.all().order_by('id')  # o por un campo como 'code'
+        return context
+
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
@@ -98,6 +103,25 @@ class OrderViewSet(viewsets.ModelViewSet):
         total = sum(line.subtotal() for line in lines)
         order.total = total
         order.save()
+
+class ChangeOrderStatusView(View):
+    def post(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        new_status_code = request.POST.get('status')  # viene del template
+
+        if not new_status_code:
+            messages.error(request, "No se especificó el nuevo estado.")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        try:
+            new_status = OrderStatus.objects.get(code=new_status_code)
+            order.current_status = new_status
+            order.save(update_fields=['current_status'])
+            messages.success(request, f"Estado cambiado a: {new_status}")
+        except OrderStatus.DoesNotExist:
+            messages.error(request, "Estado inválido.")
+
+        return redirect(request.META.get('HTTP_REFERER', '/'))
 # ********************************************* Imprimir Orden ************************
 
 class OrderPrintView(LoginRequiredMixin, View):
