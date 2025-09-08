@@ -32,11 +32,17 @@ class HomeViewPrivate(LoginRequiredMixin, TemplateView):
 
         orders_this_month = Order.objects.filter(Q(request_date__month=Current_month) & Q(request_date__year=Current_year)).count()
         clients_this_month = Client.objects.filter(Q(created__month=Current_month) & Q(created__year=Current_year)).count()
-
-        orders_this_day = Order.objects.filter(Q(request_date=Current_date))
-        delivery_now = Order.objects.filter(deadline=Current_date)  # Pedidos entregados hoy
-        delivery_tomorrow = Order.objects.filter(deadline=Current_date + timedelta(days=1))  # Pedidos a entregar mañana
         
+        # Quitar anulados desde aquí
+        OrderNull = Order.objects.exclude(current_status__code="anulado")
+
+        orders_this_day = OrderNull.filter(request_date=Current_date)
+
+        # Solo pedidos no anulados con entrega hoy
+        delivery_now = OrderNull.filter(deadline=Current_date)
+
+        # Solo pedidos no anulados con entrega mañana
+        delivery_tomorrow = OrderNull.filter(deadline=Current_date + timedelta(days=1))
         clients_data = lastTwelveMonths(Client, "clientes", Current_date)
         orders_data = lastTwelveMonths(Order, "orders", Current_date)
         months_name = lastTwelveMonthsName(Current_date)
@@ -175,14 +181,17 @@ class calendarView(LoginRequiredMixin, TemplateView):
         # Crear eventos solo para órdenes
         events = [
             {
-                'title': order.client.name,
-                'start': order.deadline.strftime('%Y-%m-%d'),
-                'end': order.deadline.strftime('%Y-%m-%d'),
-                'url': reverse('orders:detail', kwargs={'pk': order.id}),
-                'color': 'green' if (order.current_status and order.current_status.code == "cancelado") else 'red',
-
-            }
-            for order in orders
+            'title': order.client.name,
+            'start': order.deadline.strftime('%Y-%m-%d'),
+            'end': order.deadline.strftime('%Y-%m-%d'),
+            'url': reverse('orders:detail', kwargs={'pk': order.id}),
+            'color': (
+                'green' if (order.current_status and order.current_status.code == "cancelado")
+                else 'gray' if (order.current_status and order.current_status.code == "anulado")
+                else 'red'
+            ),
+        }
+        for order in orders
         ]
 
         context['events'] = json.dumps(events)

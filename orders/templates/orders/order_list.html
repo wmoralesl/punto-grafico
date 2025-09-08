@@ -46,6 +46,7 @@
                         <th>Cliente</th>
                         <th>Artículos</th>
                         <th>Saldo</th>
+                        <th>Estado</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -56,6 +57,15 @@
                         <td>{{ order.client.name }}</td>
                         <td class="text-truncate description-col">{{ order.get_lines }}</td>
                         <td>Q{{ order.saldo }}</td>
+                        <td>
+                            <span class="badge  {% if order.current_status.code == 'cancelado' %}bg-success{% elif order.current_status.code == 'anulado'  %}bg-secondary{% else %}bg-danger{% endif %}">
+                                {% if order.current_status.code %}
+                                {{ order.current_status.code }}
+                                {% else %}
+                                N/E
+                                {% endif %}
+                            </span>
+                        </td>
                         <td>
                             <a href="{% url 'orders:detail' order.id %}" class="btn btn-sm btn-info"> 
                             <i class="bi bi-eye"></i>    
