@@ -19,7 +19,11 @@
 
     <meta property="og:title" content="{{organization.name}}" />
     <meta property="og:description" content="{{organization.description}}" />
+    {% if organization.banner %}
     <meta property="og:image" content="{{ organization.banner.url }}" />
+    {% else %}
+    <meta property="og:image" content="{% static 'img/untils/noimage.jpg' %}" />
+    {% endif %}
     <meta property="og:url" content="https://pixelzone.pythonanywhere.com/" />
     <meta property="og:type" content="website" />
 </head>
