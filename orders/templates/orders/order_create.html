@@ -377,8 +377,16 @@
                     }
                     
                     const response = await axios.post(`${API_BASE_URL}/admin/o/api/orders/`, payload)
-                    alert('Pedido creado exitosamente!')
-                    window.location.href = `/admin/o/detail/${response.data.id}`
+                     Swal.fire({
+                        title: '¡Pedido creado!',
+                        text: 'El pedido fue creado exitosamente.',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/admin/o/detail/${response.data.id}`
+                    }
+                    });
                 } catch (error) {
                     console.error('Error creating order:', error)
                     alert('Error al crear el pedido')
