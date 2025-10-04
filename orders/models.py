@@ -2,6 +2,17 @@ from django.db import models
 from users.models import User
 from clients.models import Client
 from employee.models import Employee
+class ActiveOrderQuerySet(models.QuerySet):
+    def active(self):
+        return self.filter(is_active=True)
+
+
+class OrderManager(models.Manager):
+    def get_queryset(self):
+        return ActiveOrderQuerySet(self.model, using=self._db).filter(is_active=True)
+
+    def all_with_inactive(self):
+        return ActiveOrderQuerySet(self.model, using=self._db)
 
 # Create your models here.
 class OrderStatus(models.Model):
@@ -31,11 +42,16 @@ class Order(models.Model):
     updated=models.DateField(auto_now=True)
     responsible = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, blank=True)
     current_status = models.ForeignKey(OrderStatus, on_delete=models.SET_NULL, null=True)
+    is_active = models.BooleanField(default=True)
 
-
+    
     def __str__(self):
         return f"Order #{self.id} - {self.client.name}"
     
+    def delete(self, using=None, keep_parents=False):
+        self.is_active = False
+        self.save()
+
     def saldo(self):
         return self.get_total() - self.anticipo
     
@@ -48,6 +64,9 @@ class Order(models.Model):
 
     def get_lines(self):
         return " • ".join([str(line) for line in self.lines.all()])
+
+    objects = OrderManager()  # Solo activos por defecto
+    all_objects = models.Manager()  # Todos (activos e inactivos)
 
 
 class OrderLine(models.Model):
