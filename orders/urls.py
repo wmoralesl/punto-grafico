@@ -24,6 +24,7 @@ urlpatterns = [
     path('create/line/<int:pk>/', OrderLineCreateView.as_view(), name='create-line'),
     
     path('client-suggestions/', ClientSuggestionsView.as_view(), name='client-suggestions'),
+    path('api/order/<int:pk>/delete/', OrderDeleteView.as_view(), name='api_order_delete'),
 
     path('print/<int:pk>/', OrderPrintView.as_view(), name='print'),
     path('prin/<int:pk>/', OrderPreviewPrint.as_view(), name='preview-print'),

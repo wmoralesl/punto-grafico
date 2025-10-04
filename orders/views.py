@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from config import settings
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status, permissions
 from rest_framework.response import Response
 from .models import Client, Order, OrderLine, OrderStatus
 from .serializers import ClientSerializer, OrderSerializer, OrderDetailSerializer, OrderLineSerializer, EmployeeSerializer
@@ -21,6 +21,8 @@ from django.contrib.staticfiles import finders
 from django.template.loader import get_template
 from weasyprint import HTML
 from urllib.parse import quote
+from rest_framework.views import APIView
+from django.contrib.auth import authenticate
 
 # Create your views here.
 
@@ -205,3 +207,20 @@ class OrderLineCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['order'] = get_object_or_404(Order, pk=self.kwargs['pk'])
         return context
+
+
+class OrderDeleteView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        password = request.data.get('password')
+
+        if not request.user.check_password(password):
+            return Response({'error': 'Contraseña incorrecta'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            order = Order.objects.get(pk=pk)
+            order.delete()
+            return Response({'success': True}, status=status.HTTP_200_OK)
+        except Order.DoesNotExist:
+            return Response({'error': 'Pedido no encontrado'}, status=status.HTTP_404_NOT_FOUND)

@@ -19,11 +19,11 @@
         </a></li>
         <li><hr class="dropdown-divider"></li>
         <li>
-            <a class="dropdown-item bg-danger text-white" href="#">
-            <i class="bi bi-trash me-2" ></i>
-                Eliminar Pedido
-        </a>
-    </li>
+  <a class="dropdown-item bg-danger text-white" href="#" onclick="confirmDelete('{{ order.id }}')">
+    <i class="bi bi-trash me-2"></i> Eliminar Pedido
+  </a>
+</li>
+
     </ul>
 </div>
 </div>
@@ -162,4 +162,92 @@
     </div>
     
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    
+
+    const API_BASE_URL = "{{ API_BASE_URL }}";
+  function confirmDelete(orderId) {
+    Swal.fire({
+      title: '¿Eliminar pedido?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      input: 'password',
+      inputLabel: 'Introduce tu contraseña para continuar',
+      inputPlaceholder: 'Contraseña',
+      inputAttributes: {
+        autocapitalize: 'off',
+        autocorrect: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      showLoaderOnConfirm: true,
+      preConfirm: async (password) => {
+    if (!password) {
+        Swal.showValidationMessage('Debes ingresar tu contraseña');
+        return false;
+    }
+
+    try {
+        const response = await axios.post(
+            `${API_BASE_URL}/admin/o/api/order/${orderId}/delete/`,
+            { password }, // body
+            {
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            }
+        );
+
+        // Si quieres guardar algo del response, puedes usar:
+        // const data = response.data;
+
+        return response.data; // devuelve la data para que SweetAlert continue
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            Swal.showValidationMessage('Contraseña incorrecta');
+        } else if (error.response && error.response.status === 404) {
+            Swal.showValidationMessage('Pedido no encontrado');
+        } else {
+            Swal.showValidationMessage('Error al eliminar el pedido');
+        }
+    }
+},
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Pedido eliminado',
+          text: 'El pedido fue eliminado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          window.location.href = "{% url 'orders:list' %}";
+        });
+      }
+    });
+  }
+
+  // Obtener el token CSRF (requerido para fetch en Django)
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
 {% endblock %}
