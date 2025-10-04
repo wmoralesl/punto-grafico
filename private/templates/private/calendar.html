@@ -2,38 +2,59 @@
 
 {% block content %}
 <style>
-    #calendar {
-        max-width: 80%;
-        max-height: 90vh;
-        margin: 40px auto;
-        
-    }
+  #calendar {
+    max-width: 80%;
+    max-height: 90vh;
+    margin: 40px auto;
+  }
 
-    .fc-toolbar-title{
-      text-transform: uppercase;
-    }
-    a{
-        color: black;
-        text-decoration: none;
-    }
+  .fc-toolbar-title {
+    text-transform: uppercase;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .filter-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
 </style>
-</style>
+
+<div class="filter-container">
+   <form id="filterForm" method="get" class="d-flex justify-content-center">
+        <select
+          name="range"
+          id="rangeSelect"
+          class="form-select w-auto"
+          onchange="document.getElementById('filterForm').submit();"
+        >
+          <option value="recent" {% if range_filter == 'recent' %}selected{% endif %}>Recientes</option>
+          <option value="all" {% if range_filter == 'all' %}selected{% endif %}>Todos</option>
+        </select>
+      </form>
+</div>
+
 <div id="calendar"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js"></script>
 <script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: {{events|safe}},
-        locales: 'es',
-      });
-      
-      calendar.render();
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'es',
+      events: {{ events|safe }},
     });
 
-  </script>
-
+    calendar.render();
+  });
+</script>
 {% endblock %}

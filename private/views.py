@@ -171,28 +171,49 @@ class CustomPasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, Password
         return response
     
 
-class calendarView(LoginRequiredMixin, TemplateView):
+class CalendarView(LoginRequiredMixin, TemplateView):
     template_name = 'private/calendar.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        orders = Order.objects.all()
+        range_filter = self.request.GET.get('range', 'recent')  # "recent" por defecto
 
-        # Crear eventos solo para órdenes
+        today = date.today()
+        first_day_current = today.replace(day=1)
+
+        if range_filter == 'recent':
+            # mes anterior
+            prev_month = (first_day_current - timedelta(days=1)).replace(day=1)
+            # mes siguiente
+            next_month = (first_day_current + timedelta(days=32)).replace(day=1)
+            end_next = (next_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+
+            start_date = prev_month
+            end_date = end_next
+
+        else:  # 'all'
+            start_date = None
+            end_date = None
+
+        orders = Order.objects.all()
+        if start_date and end_date:
+            orders = orders.filter(deadline__range=(start_date, end_date))
+
         events = [
             {
-            'title': order.client.name,
-            'start': order.deadline.strftime('%Y-%m-%d'),
-            'end': order.deadline.strftime('%Y-%m-%d'),
-            'url': reverse('orders:detail', kwargs={'pk': order.id}),
-            'color': (
-                'green' if (order.current_status and order.current_status.code == "cancelado")
-                else 'gray' if (order.current_status and order.current_status.code == "anulado")
-                else 'red'
-            ),
-        }
-        for order in orders
+                'title': order.client.name,
+                'start': order.deadline.strftime('%Y-%m-%d'),
+                'end': order.deadline.strftime('%Y-%m-%d'),
+                'url': reverse('orders:detail', kwargs={'pk': order.id}),
+                'color': (
+                    'green' if (order.current_status and order.current_status.code == "cancelado")
+                    else 'gray' if (order.current_status and order.current_status.code == "anulado")
+                    else 'red'
+                ),
+            }
+            for order in orders
         ]
 
         context['events'] = json.dumps(events)
+        context['range_filter'] = range_filter
         return context
