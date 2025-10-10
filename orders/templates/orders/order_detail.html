@@ -52,9 +52,17 @@
                                  href="{% url 'clients:client_detail' order.client.id %}">{{ order.client.name }}</a>
                             </p>
                         </div>
-                        <div class="col mt-2">
-                            <p><strong>Teléfono:</strong> {{order.client.phone}} </p>
-                        </div>
+    <div class="col mt-2">
+        <strong>Teléfono:</strong> 
+ <a href="#" 
+   class="icon-link icon-link-hover text-secondary copy-phone "
+   data-phone="{{ order.client.phone }}"
+   title="Copiar teléfono"
+   style="vertical-align: middle; --bs-icon-link-transform: translate3d(0, -.125rem, 0);">
+   {{ order.client.phone }}
+   <i class="bi bi-clipboard ms-1"></i>
+</a>
+</div>
                     </div>
                 </div>
             </div>
@@ -168,6 +176,23 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.copy-phone').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const phone = link.getAttribute('data-phone');
+            navigator.clipboard.writeText(phone).then(() => {
+                // cambia el ícono temporalmente a un check verde
+                const originalIcon = link.innerHTML;
+                link.innerHTML = '<i class="bi bi-clipboard-check text-success"></i>';
+                setTimeout(() => link.innerHTML = originalIcon, 1500);
+            });
+        });
+    });
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
