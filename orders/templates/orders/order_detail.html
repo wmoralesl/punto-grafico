@@ -47,7 +47,10 @@
                 <div class="card p-2">
                     <div class="row text-center">
                         <div class="col mt-2">
-                            <p><strong>Cliente:</strong> {{ order.client.name }}</p>
+                            <p><strong>Cliente:</strong>
+                                <a class="link-offset-2 link-underline link-underline-opacity-0"
+                                 href="{% url 'clients:client_detail' order.client.id %}">{{ order.client.name }}</a>
+                            </p>
                         </div>
                         <div class="col mt-2">
                             <p><strong>Teléfono:</strong> {{order.client.phone}} </p>

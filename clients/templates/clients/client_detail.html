@@ -38,6 +38,47 @@
             </div>
         </div>
     </div>
+    
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-cart-check"></i> Órdenes del Cliente</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if client.orders.all %}
+                <div class="list-group list-group-flush">
+                    {% for order in client.orders.all reversed  %}
+                        <a href="{% url 'orders:detail' order.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">
+                                    <i class="bi bi-receipt"></i> Orden #{{ order.id }}
+                                </h6>
+                                <p>{{ order.get_lines|truncatechars:100 }}</p>
+                                <small class="text-muted">
+                                    {% if order.created %}
+                                        <i class="bi bi-calendar-event"></i> {{ order.created|date:"d/m/Y" }}
+                                    {% endif %}
+                                    
+                                        | <i class="bi bi-info-circle"></i> {{ order.current_status.get_code_display }}
+                                    
+                                </small>
+                            </div>
+                            <div class="text-end">
+                                {% if order.total %}
+                                    <strong class="text-success">Q{{ order.total }}</strong>
+                                {% endif %}
+                                <i class="bi bi-chevron-right ms-2"></i>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">Este cliente no tiene órdenes registradas</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 {% endblock %}

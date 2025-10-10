@@ -33,7 +33,7 @@ class OrderStatus(models.Model):
         return dict(self.STATUS_CHOICES).get(self.code, self.code).title()
 
 class Order(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, blank=True, null=True)
+    client = models.ForeignKey(Client, related_name='orders', on_delete=models.SET_NULL, blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     request_date = models.DateField()
     deadline = models.DateField()
@@ -41,7 +41,7 @@ class Order(models.Model):
     created=models.DateTimeField(auto_now_add=True)
     updated=models.DateField(auto_now=True)
     responsible = models.ForeignKey(Employee, on_delete=models.PROTECT, null=True, blank=True)
-    current_status = models.ForeignKey(OrderStatus, on_delete=models.SET_NULL, null=True)
+    current_status = models.ForeignKey(OrderStatus, on_delete=models.SET_NULL, null=True, default=1)
     is_active = models.BooleanField(default=True)
 
     
