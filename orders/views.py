@@ -128,6 +128,9 @@ class ChangeOrderStatusView(View):
         return redirect(request.META.get('HTTP_REFERER', '/'))
 # ********************************************* Imprimir Orden ************************
 
+import base64
+from django.core.files.storage import default_storage
+
 class OrderPrintView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         
@@ -137,26 +140,29 @@ class OrderPrintView(LoginRequiredMixin, View):
 
         organization = Configuration.get_configuration()
 
-        logo_url = None
+        logo_base64 = None
         if organization.logo:
-            # Opción 1: URL absoluta con el dominio
-            logo_url = request.build_absolute_uri(organization.logo.url)
-            
-            # Opción 2: Ruta física del archivo (más confiable con WeasyPrint)
-            # logo_url = organization.logo.path
+            try:
+                with open(organization.logo.path, 'rb') as image_file:
+                    logo_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+                    # Detectar el tipo de imagen
+                    ext = organization.logo.name.split('.')[-1].lower()
+                    logo_base64 = f"data:image/{ext};base64,{logo_base64}"
+            except Exception as e:
+                print(f"Error cargando logo: {e}")
+                logo_base64 = None
 
         data = {
             'order': orden,
             'organization': organization,
-            'logo_url': logo_url,
-
+            'logo_url': logo_base64,  # Ahora es base64
         }
+        
         pdf = printPDF(html_name, css_url, data)
         response = HttpResponse(pdf, content_type='application/pdf')
         nombre_archivo = "Mipedido.pdf"
         response['Content-Disposition'] = f"inline; filename*=UTF-8''{quote(nombre_archivo)}"
         
-        # response['Content-Disposition'] = 'attachment; filename="pedido.pdf"'
         return response
 
 class OrderPreviewPrint(LoginRequiredMixin, DetailView):
