@@ -7,10 +7,13 @@ from django.contrib.auth.password_validation import validate_password
 class ConfigurationForm(forms.ModelForm):
     class Meta:
         model = Configuration
-        fields = ['name', 'logo', 'description', 'banner', 'favicon']
+        fields = ['name', 'logo', 'direction', 'phone', 'email', 'description', 'banner', 'favicon']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'direction': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'banner': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'favicon' : forms.ClearableFileInput(attrs={'class' : 'form-control'}),
@@ -18,6 +21,9 @@ class ConfigurationForm(forms.ModelForm):
         labels = {
             'name': 'Nombre de la Organización',
             'logo': 'Logotipo',
+            'direction': 'Dirección',
+            'phone': 'Teléfono',
+            'email': 'Correo Electrónico',
             'description': 'Descripción Detallada',
             'banner': 'Banner',
             'favicon' : 'Icono de la pagina'
