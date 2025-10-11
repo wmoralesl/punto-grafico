@@ -20,19 +20,15 @@
         <i class="bi bi-file-earmark-text me-2"></i> Pedidos
       </a>
     </li>
-    <li class="nav-item">
-      <a href="{% url 'clients:client_list' %}" class="nav-link text-light {% if '/c/' in request.path %}active{% endif %}">
-        <i class="bi bi-people me-2"></i> Clientes
-      </a>
-    </li>
-    <li class="nav-item">
-      <a href="{% url 'employee:employee_list' %}" class="nav-link text-light {% if '/e/' in request.path %}active{% endif %}">
-        <i class="bi bi-people me-2"></i> Empleados
-      </a>
-    </li>
+
     <li class="nav-item" >
       <a href="{% url 'private:calendar' %}" class="nav-link text-light {% if '/calendar/' in request.path %}active{% endif %}">
         <i class="bi bi-calendar me-2" ></i> Calendario
+      </a>
+    </li>
+        <li class="nav-item">
+      <a href="{% url 'clients:client_list' %}" class="nav-link text-light {% if '/c/' in request.path %}active{% endif %}">
+        <i class="bi bi-people me-2"></i> Clientes
       </a>
     </li>
     <li class="nav-item">
@@ -40,11 +36,17 @@
         <i class="bi bi-gear me-2"></i> Configuración
       </a>
     </li>
-
+        <li class="nav-item">
+      <a href="{% url 'employee:employee_list' %}" class="nav-link text-light {% if '/e/' in request.path %}active{% endif %}">
+        <i class="bi bi-people me-2"></i> Empleados
+      </a>
+    </li>
+    {% if organization.phone == "30486428" %}
     <li class="nav-item">
       <a href="{% url 'products:design_list' %}" class="nav-link text-light {% if '/d/' in request.path %}active{% endif %}">
         <i class="bi bi-card-image me-2"></i> Diseños
       </a>
-    </li>
+    </li> 
+    {% endif %}
 
   </ul>

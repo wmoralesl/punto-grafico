@@ -45,11 +45,13 @@
           <i class="bi bi-clock-history me-2"></i>
           Historial de cambios
         </a></li>
+          {% if organization.phone == "30486428" %}
           <li>
       <a class="dropdown-item" href="{% url 'users:list' %}" >
         <i class="bi bi-people me-2"></i> Gestionar Usuarios
       </a>
     </li>
+          {% endif %}
       </ul>
     </div>
     {% endif %}
