@@ -11,6 +11,8 @@ class Configuration(models.Model):
     direction = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    footer = models.CharField(max_length=255, blank=True, null=True)
+    gratitude = models.CharField(max_length=255, blank=True, null=True)
     logo = models.ImageField(
         upload_to='logos/', 
         blank=True, 
