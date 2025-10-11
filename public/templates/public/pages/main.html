@@ -38,7 +38,8 @@
     <div class="overlay">
       <h1 class="display-4">{{ organization.name }}</h1>
       <p class="lead">{{ organization.description }}</p>
-      <a href="{% url 'public:catalog' %}" class="btn btn-outline-light btn-lg">Ver Catálogo</a>
+      <!-- <a href="{% url 'public:catalog' %}" class="btn btn-outline-light btn-lg">Ver Catálogo</a> -->
+    <a href="{% url 'auth:login' %}" class="btn btn-outline-light btn-lg">Iniciar Sesión</a>
     </div>
   </div>
 

@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy, reverse
+
+from private.models import Configuration
 from .forms import OrderForm, OrderLineFormSet, OrderUpdateForm, OrderLineForm
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.generic import TemplateView, DetailView, ListView, View, UpdateView, DeleteView, CreateView
@@ -133,8 +135,20 @@ class OrderPrintView(LoginRequiredMixin, View):
         css_url = finders.find('css/general.css')
         html_name = 'print/orderPrint.html'
 
+        organization = Configuration.get_configuration()
+
+        logo_url = None
+        if organization.logo:
+            # Opción 1: URL absoluta con el dominio
+            logo_url = request.build_absolute_uri(organization.logo.url)
+            
+            # Opción 2: Ruta física del archivo (más confiable con WeasyPrint)
+            # logo_url = organization.logo.path
+
         data = {
             'order': orden,
+            'organization': organization,
+            'logo_url': logo_url,
 
         }
         pdf = printPDF(html_name, css_url, data)

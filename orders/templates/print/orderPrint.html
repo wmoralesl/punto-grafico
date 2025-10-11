@@ -127,13 +127,13 @@
         <!-- Encabezado con logo e información de la empresa -->
         <div class="header">
             <div>
-                <img class="logo" src="https://lh3.googleusercontent.com/a/ACg8ocKg51Dm7PD4TYVjFbHVJ3YY68xT14oYZ2xmRUz8enN5tuNTcNubH5jHwK3u29olxKvD69gRfs5KAQ8iwS8ayl5_vSZX2xlz=s288-c-no" alt="Logo PubliPrint">
+                <img class="logo" src="{{ logo_url }}" alt="Logo PubliPrint">
             </div> 
             <div class="company-info">
-                <div class="company-name">PUBLIPRINT</div>
-                <div>Bo. El Calvario, San Luis Jilotepeque, Jalapa, Guatemala</div>
-                <div>3048-6428</div>
-                <div>publiprint021@gmail.com</div>
+                <div class="company-name">{{organization.name}}</div>
+                <div>{{organization.direction}}</div>
+                <div>{{organization.phone}}</div>
+                <div>{{organization.email}}</div>
             </div>
         </div>
 
